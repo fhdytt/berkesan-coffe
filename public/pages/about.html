@@ -38,25 +38,23 @@
         </div>
 
         <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-          <a href="#" class="text-[#836527] hover:text-[#63773c] transition">
-            Tentang
-          </a>
-
-          <a
-            href="#signature"
-            class="text-[#63773c] hover:text-[#836527] transition"
-          >
-            Signature
-          </a>
-
-          <a
-            href="/order"
-            class="bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-5 py-2 rounded-full transition shadow-lg"
-          >
-            Pesan
-          </a>
+          <a href="#" class="text-[#836527] hover:text-[#63773c] transition">Tentang</a>
+          <a href="#signature" class="text-[#63773c] hover:text-[#836527] transition">Signature</a>
+          <a href="/order" class="bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-5 py-2 rounded-full transition shadow-lg">Pesan</a>
         </div>
+
+        <!-- Hamburger Button (mobile) -->
+        <button id="menu-toggle" class="md:hidden text-[#63773c] text-2xl focus:outline-none">
+          <i class="fas fa-bars"></i>
+        </button>
       </nav>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden flex-col gap-4 py-4 border-b border-[#63773c]/20 text-sm font-medium">
+        <a href="#" class="text-[#836527] hover:text-[#63773c] transition">Tentang</a>
+        <a href="#signature" class="text-[#63773c] hover:text-[#836527] transition" id="mobile-signature">Signature</a>
+        <a href="/order" class="bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-5 py-2 rounded-full transition shadow-lg text-center">Pesan</a>
+      </div>
 
       <!-- HERO -->
       <section class="py-20 lg:py-28 text-center fade-up">
@@ -372,5 +370,17 @@
         "Kopi yang dikenang, karena cerita yang terbagi"
       </p>
     </footer>
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    toggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('flex');
+    });
+    document.getElementById('mobile-signature').addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('flex');
+    });
+  </script>
   </body>
 </html>
