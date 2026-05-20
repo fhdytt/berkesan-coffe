@@ -491,27 +491,6 @@ function resetQueue() {
   document.getElementById('queueOrderCode').textContent = 'Belum ada panggilan';
   showToast('Antrian direset');
 }
-  if (!window.speechSynthesis) return;
-  const digits = number.slice(1);
-  const spoken = number[0] + ' ' + digits.split('').join(' ');
-  const namePart = customerName ? `, atas nama ${customerName},` : ',';
-  const text = `Nomor antrian ${spoken}${namePart} silakan mengambil pesanan`;
-
-  window.speechSynthesis.cancel(); // batalkan suara sebelumnya jika masih berjalan
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'id-ID';
-  utter.rate = 0.9;
-  utter.pitch = 1;
-  window.speechSynthesis.speak(utter);
-}
-
-function resetQueue() {
-  if (!confirm('Reset semua nomor antrian?')) return;
-  _currentQNum = null;
-  document.getElementById('currentQueue').textContent = '—';
-  document.getElementById('queueOrderCode').textContent = 'Belum ada panggilan';
-  showToast('Antrian direset');
-}
 
 /* ═══════════════════════════════
    RIWAYAT
