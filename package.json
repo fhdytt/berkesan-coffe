@@ -1,0 +1,13 @@
+{
+  "name": "berkesan-coffe",
+  "version": "1.0.0",
+  "description": "Berkesan Coffe - Admin, Kasir & Customer Portal",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'Open index.html in your browser to start'",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "keywords": ["coffe", "admin", "kasir", "order"],
+  "author": "",
+  "license": "ISC"
+}

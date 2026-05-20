@@ -1,10 +1,31 @@
 {
+  "buildCommand": "",
+  "outputDirectory": ".",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/admin", "destination": "/admin/index.html" },
-    { "source": "/kasir", "destination": "/kasir/index.html" },
-    { "source": "/login", "destination": "/public/pages/login.html" },
-    { "source": "/order", "destination": "/public/pages/order.html" },
-    { "source": "/about", "destination": "/public/pages/about.html" }
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/kasir",
+      "destination": "/kasir/index.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/public/pages/about.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/public/pages/login.html"
+    },
+    {
+      "source": "/order",
+      "destination": "/public/pages/order.html"
+    }
   ]
 }
