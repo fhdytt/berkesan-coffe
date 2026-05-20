@@ -11,7 +11,6 @@ let _autoRefresh    = null;
 
 /* ── Queue counter: persist per hari via localStorage ── */
 const _QUEUE_KEY = 'berkesan_queue_counter';
-const _QUEUE_MAP_KEY = 'berkesan_queue_map'; // Mapping A01 → order data
 
 function _todayStr() {
   return new Date().toISOString().slice(0, 10); // "2026-05-20"
@@ -27,25 +26,6 @@ function _getQueueCounter() {
 
 function _setQueueCounter(n) {
   localStorage.setItem(_QUEUE_KEY, JSON.stringify({ date: _todayStr(), count: n }));
-}
-
-/* Simpan mapping nomor antrian ke order data */
-function _getQueueMap() {
-  try {
-    const raw = JSON.parse(localStorage.getItem(_QUEUE_MAP_KEY) || '{}');
-    if (raw.date !== _todayStr()) return { date: _todayStr(), map: {} };
-    return raw;
-  } catch { return { date: _todayStr(), map: {} }; }
-}
-
-function _setQueueMap(map) {
-  localStorage.setItem(_QUEUE_MAP_KEY, JSON.stringify({ date: _todayStr(), map }));
-}
-
-function _addQueueMapping(number, orderData) {
-  const data = _getQueueMap();
-  data.map[number] = orderData;
-  _setQueueMap(data.map);
 }
 
 /* ═══════════════════════════════
@@ -448,26 +428,19 @@ function stopScan() {
 }
 
 /* ═══════════════════════════════
-   ANTRIAN - FIXED VERSION
+   ANTRIAN
 ═══════════════════════════════ */
 async function loadAntrian() {
   try {
     const data = await apiFetch(`${API}/queue`);
     _queueOrders = data.orders || [];
-    
-    // Buat mapping order_code → order data untuk akses cepat
-    const orderMap = {};
-    _queueOrders.forEach(o => {
-      orderMap[o.order_code] = o;
-    });
-    
-    renderAntrian(_queueOrders, orderMap);
+    renderAntrian(_queueOrders);
   } catch(e) {
     showToast('Gagal memuat antrian', 'error');
   }
 }
 
-function renderAntrian(orders, orderMap = {}) {
+function renderAntrian(orders) {
   const list  = document.getElementById('queueList');
   const empty = document.getElementById('emptyQueue');
   const badge = document.getElementById('queueCount');
@@ -503,29 +476,14 @@ function callNext() {
     showToast('Tidak ada antrian', 'warn');
     return;
   }
-  
-  // Cari order yang sedang diproses, jika tidak ada ambil yang pending pertama
-  const next = _queueOrders.find(o => o.status === 'diproses') || 
-               _queueOrders.find(o => o.status === 'pending');
-  
-  if (!next) {
-    showToast('Tidak ada order yang bisa dipanggil', 'warn');
-    return;
-  }
-  
-  // Increment counter harian
+  const next = _queueOrders.find(o => o.status === 'diproses') || _queueOrders[0];
+  // Increment counter harian lalu gunakan sebagai nomor panggilan
   const count = _getQueueCounter() + 1;
   _setQueueCounter(count);
   const number = 'A' + String(count).padStart(2, '0');
-  
-  // Simpan mapping nomor → order data
-  _addQueueMapping(number, next);
-  
   _currentQNum = number;
   document.getElementById('currentQueue').textContent = number;
-  document.getElementById('queueOrderCode').textContent = 
-    `${next.customer_name || next.order_code}${next.table_number ? ' - Meja ' + next.table_number : ''}`;
-  
+  document.getElementById('queueOrderCode').textContent = `${next.customer_name || next.order_code}${next.table_number ? ' - Meja ' + next.table_number : ''}`;
   showToast(`Memanggil antrian ${number}`);
   announceQueue(number, next.customer_name);
 }
@@ -534,31 +492,16 @@ function callSpecific() {
   const input = document.getElementById('callSpecificInput');
   const n = parseInt(input.value);
   if (!n || n < 1) { showToast('Masukkan nomor antrian yang valid', 'warn'); return; }
-  
   const number = 'A' + String(n).padStart(2, '0');
-  
-  // Cari order berdasarkan nomor urutan di daftar
+  // Cari order berdasarkan urutan di daftar (index = n-1)
   const order = _queueOrders[n - 1];
-  
-  if (!order) {
-    showToast('Nomor antrian tidak ditemukan', 'warn');
-    return;
-  }
-  
-  const customerName = order.customer_name || '';
-  
-  // Update counter jika perlu
-  _setQueueCounter(Math.max(_getQueueCounter(), n));
-  
-  // Simpan mapping
-  _addQueueMapping(number, order);
-  
+  const customerName = order?.customer_name || '';
+  _setQueueCounter(Math.max(_getQueueCounter(), n)); // update counter jika perlu
   _currentQNum = number;
   document.getElementById('currentQueue').textContent = number;
   document.getElementById('queueOrderCode').textContent = customerName
     ? `${customerName}${order?.table_number ? ' - Meja ' + order.table_number : ''}`
     : `Antrian ${number}`;
-  
   showToast(`Memanggil antrian ${number}`);
   announceQueue(number, customerName);
   input.value = '';
@@ -568,7 +511,6 @@ function resetQueue() {
   if (!confirm('Reset semua nomor antrian? Nomor akan mulai dari 1 lagi besok.')) return;
   _setQueueCounter(0);
   localStorage.removeItem(_QUEUE_KEY);
-  localStorage.removeItem(_QUEUE_MAP_KEY);
   localStorage.removeItem(_ORDER_NUM_KEY);
   _currentQNum = null;
   document.getElementById('currentQueue').textContent = '—';
@@ -578,21 +520,15 @@ function resetQueue() {
 
 function announceQueue(number, customerName) {
   if (!window.speechSynthesis) return;
-  
   const digits = number.slice(1);
   const spoken = number[0] + ' ' + digits.split('').join(' ');
   const namePart = customerName ? `, atas nama ${customerName},` : ',';
   const text = `Nomor antrian ${spoken}${namePart} silakan mengambil pesanan`;
-  
-  // Batalkan pengumuman sebelumnya
   window.speechSynthesis.cancel();
-  
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = 'id-ID';
   utter.rate = 0.9;
   utter.pitch = 1;
-  utter.volume = 1;
-  
   window.speechSynthesis.speak(utter);
 }
 
