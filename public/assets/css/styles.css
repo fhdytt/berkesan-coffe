@@ -1,0 +1,401 @@
+/* =============================================
+   RESET & GLOBAL STYLES
+   ============================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url(/public/assets/img/kopi.jpeg);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+/* Container untuk memusatkan card */
+.card-container {
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* =============================================
+   MAIN CARD STYLE
+   ============================================= */
+.promo-card {
+    background: #ffffff;
+    border-radius: 42px;
+    box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.35), 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 20px 22px 28px 22px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+}
+
+.promo-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 50px -15px rgba(0, 0, 0, 0.4);
+}
+
+/* =============================================
+   HEADER ( @kopikenangan.id & jam )
+   ============================================= */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    border-bottom: 2px dashed #f0e1ce;
+    padding-bottom: 12px;
+}
+
+.brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f9ede1;
+    padding: 6px 14px;
+    border-radius: 50px;
+}
+
+.brand-badge i {
+    font-size: 1.2rem;
+    color: #b45f2b;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: #4a2c1a;
+    letter-spacing: -0.2px;
+}
+
+.time-indicator {
+    background: #f4f0eb;
+    padding: 6px 14px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #7b4a2e;
+}
+
+.time-indicator i {
+    font-size: 0.8rem;
+    color: #b87333;
+}
+
+/* =============================================
+   DISKON BANNER (DISKON 10RB + GABUNG KOMUNITAS)
+   ============================================= */
+.discount-banner {
+    background: linear-gradient(105deg, #fef5e8 0%, #fff1e2 100%);
+    border-left: 6px solid #e67e22;
+    border-radius: 28px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.08);
+}
+
+.discount-icon i {
+    font-size: 2.3rem;
+    color: #e67e22;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+}
+
+.discount-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.discount-amount {
+    font-weight: 800;
+    font-size: 1.4rem;
+    color: #c0392b;
+    letter-spacing: -0.3px;
+    background: #ffefe5;
+    display: inline-block;
+    width: fit-content;
+    padding: 2px 12px;
+    border-radius: 30px;
+}
+
+.join-community {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #8b5a2e;
+    background: #ffffffc9;
+    padding: 4px 12px;
+    border-radius: 30px;
+    width: fit-content;
+}
+
+/* =============================================
+   PAKET BIG ORDER / WEDDING
+   ============================================= */
+.package-section {
+    margin-bottom: 18px;
+}
+
+.package-badge {
+    background: #2c3e2f;
+    background: linear-gradient(95deg, #2d3e2a 0%, #3f5a36 100%);
+    border-radius: 40px;
+    padding: 12px 18px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    box-shadow: 0 6px 0 #1d2c1b;
+    transition: all 0.1s linear;
+}
+
+.package-badge i {
+    font-size: 1.4rem;
+    color: #ffd966;
+}
+
+.package-badge span {
+    font-weight: 800;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    color: #fef7cf;
+    text-transform: uppercase;
+}
+
+/* =============================================
+   DOWNLOAD APLIKASI
+   ============================================= */
+.download-app-section {
+    background: #1f2a1b;
+    border-radius: 60px;
+    margin-bottom: 22px;
+    transition: all 0.2s;
+}
+
+.cta-download {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 0;
+    background: #f3b33d;
+    border-radius: 60px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: #2a2418;
+    text-transform: uppercase;
+    cursor: default;
+    transition: 0.2s;
+    border: 1px solid #ffcf7a;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cta-download i {
+    font-size: 1.3rem;
+    color: #2b2b1a;
+}
+
+.cta-download span {
+    font-weight: 800;
+}
+
+/* =============================================
+   PLATFORM ROW (GrabFood, GoFood, ShopeeFood)
+   ============================================= */
+.platform-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.platform-item {
+    background: #fbf6ef;
+    flex: 1;
+    border-radius: 32px;
+    padding: 12px 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    transition: all 0.2s;
+    border: 1px solid #eedbcb;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.platform-item i {
+    font-size: 1.8rem;
+    color: #b87333;
+}
+
+.platform-item span:first-of-type {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #4d3421;
+}
+
+.platform-sub {
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: #e7d9cc;
+    padding: 3px 8px;
+    border-radius: 50px;
+    color: #5a3a22;
+}
+
+/* =============================================
+   CONTACT SECTION (WA & EMAIL)
+   ============================================= */
+.contact-section {
+    background: #faf3ea;
+    border-radius: 36px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.contact-whatsapp, .contact-email {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.contact-icon {
+    background: white;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 40px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.contact-whatsapp .contact-icon i {
+    font-size: 1.7rem;
+    color: #25D366;
+}
+
+.contact-email .contact-icon i {
+    font-size: 1.6rem;
+    color: #ea4335;
+}
+
+.contact-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.contact-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #2f2a24;
+}
+
+.contact-hours {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #9b7a5c;
+    letter-spacing: -0.2px;
+    background: #e7dbcf70;
+    padding: 2px 8px;
+    border-radius: 20px;
+    width: fit-content;
+}
+
+/* =============================================
+   DEKORASI KOPI (optional)
+   ============================================= */
+.coffee-decor {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+    opacity: 0.7;
+}
+
+.coffee-decor i {
+    font-size: 0.9rem;
+    color: #cfaa7a;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN (MOBILE FIRST)
+   ============================================= */
+@media (max-width: 480px) {
+    .promo-card {
+        padding: 16px 18px 24px 18px;
+        border-radius: 36px;
+    }
+
+    .discount-amount {
+        font-size: 1.2rem;
+    }
+
+    .join-community {
+        font-size: 0.85rem;
+    }
+
+    .package-badge span {
+        font-size: 0.8rem;
+    }
+
+    .cta-download {
+        font-size: 0.8rem;
+        padding: 12px 0;
+    }
+
+    .platform-item i {
+        font-size: 1.4rem;
+    }
+
+    .platform-item span:first-of-type {
+        font-size: 0.75rem;
+    }
+
+    .contact-title {
+        font-size: 0.85rem;
+    }
+
+    .contact-hours {
+        font-size: 0.65rem;
+    }
+
+    .card-header {
+        margin-bottom: 12px;
+    }
+}
+
+
+.platform-item:hover {
+    background: #f8ede2;
+    border-color: #d4a373;
+    transform: scale(0.98);
+    transition: all 0.2s;
+}
+
+.contact-whatsapp:hover .contact-icon,
+.contact-email:hover .contact-icon {
+    transform: scale(1.02);
+    background: #fff6ef;
+}

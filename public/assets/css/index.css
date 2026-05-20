@@ -1,0 +1,397 @@
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9f6ef;
+      color: #2c241a;
+      overflow-x: hidden;
+    }
+
+    /* Warm coffee shop vibe */
+    .dashboard-wrapper {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem;
+    }
+
+    /* header with brand */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #e9dbc9;
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .coffee-icon {
+      background: #6f4e2e;
+      width: 48px;
+      height: 48px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 12px rgba(111, 78, 46, 0.2);
+    }
+
+    .coffee-icon i {
+      font-size: 1.8rem;
+      color: #f9e0b0;
+    }
+
+    .brand-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #3e2a21;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-text span {
+      font-size: 0.75rem;
+      color: #a17f5f;
+      font-weight: 500;
+    }
+
+    .admin-profile {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      background: white;
+      padding: 0.5rem 1.2rem;
+      border-radius: 60px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.02);
+      border: 1px solid #eedbcb;
+    }
+
+    .admin-profile i {
+      font-size: 1.3rem;
+      color: #6f4e2e;
+    }
+
+    .admin-profile .name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      color: #b87c4f;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: 0.2s;
+    }
+
+    .logout-btn:hover {
+      color: #9b5e2e;
+      transform: scale(1.05);
+    }
+
+    /* stat cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.2rem 1.5rem;
+      border-radius: 1.5rem;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s ease;
+      border: 1px solid #f0e2d4;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 26px rgba(85, 55, 30, 0.1);
+    }
+
+    .stat-info h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #a4815b;
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #402e22;
+      line-height: 1.2;
+    }
+
+    .stat-icon {
+      background: #f9ede2;
+      width: 52px;
+      height: 52px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-icon i {
+      font-size: 1.8rem;
+      color: #b47c48;
+    }
+
+    /* dua kolom utama: chart + pesanan terbaru */
+    .dashboard-panels {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 1.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel {
+      background: #ffffff;
+      border-radius: 1.5rem;
+      padding: 1.4rem 1.3rem;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.03);
+      border: 1px solid #f1e3d7;
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      border-left: 4px solid #c28a5c;
+      padding-left: 1rem;
+    }
+
+    .panel-title h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.3rem;
+      color: #3b2a1f;
+    }
+
+    .panel-title i {
+      color: #c28a5c;
+      font-size: 1.2rem;
+    }
+
+    canvas {
+      max-height: 260px;
+      width: 100%;
+    }
+
+    /* order list */
+    .order-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .order-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid #f0e0d2;
+    }
+
+    .order-info .order-name {
+      font-weight: 700;
+      color: #2c241a;
+    }
+
+    .order-info .order-time {
+      font-size: 0.7rem;
+      color: #a4815b;
+      display: block;
+    }
+
+    .order-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.7rem;
+      border-radius: 50px;
+      background: #f6e3d4;
+      color: #9b5e2e;
+    }
+
+    .order-status.completed {
+      background: #e3f2e9;
+      color: #2b6e3c;
+    }
+
+    .order-amount {
+      font-weight: 700;
+      color: #4f3a28;
+    }
+
+    /* menu & kategori */
+    .menu-section {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.4rem;
+      border: 1px solid #f1e3d7;
+      margin-top: 0.5rem;
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .menu-header h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+
+    .btn-coffee {
+      background: #6f4e2e;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      color: white;
+      font-weight: 500;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-coffee:hover {
+      background: #8b5a34;
+      transform: scale(0.97);
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .menu-card {
+      background: #fefaf5;
+      border-radius: 1.2rem;
+      padding: 0.9rem;
+      text-align: center;
+      transition: all 0.2s;
+      border: 1px solid #f2e4d8;
+    }
+
+    .menu-card i {
+      font-size: 1.8rem;
+      background: #f1e1d2;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      border-radius: 30px;
+      color: #b87c4a;
+      margin-bottom: 0.5rem;
+    }
+
+    .menu-card h4 {
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .menu-price {
+      font-weight: 700;
+      color: #c28a5c;
+    }
+
+    /* responsive */
+    @media (max-width: 880px) {
+      .dashboard-panels {
+        grid-template-columns: 1fr;
+      }
+      .dashboard-wrapper {
+        padding: 1rem;
+      }
+      .stats-grid {
+        gap: 1rem;
+      }
+    }
+
+    /* modal sederhana untuk tambah menu */
+    .modal-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .modal-mask.active {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .modal-container {
+      background: #fff8f2;
+      max-width: 400px;
+      width: 90%;
+      border-radius: 1.8rem;
+      padding: 1.8rem;
+      box-shadow: 0 25px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-container h3 {
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 1rem;
+    }
+
+    .modal-container input {
+      width: 100%;
+      padding: 0.8rem;
+      margin: 0.5rem 0;
+      border: 1px solid #e1cfbf;
+      border-radius: 1rem;
+      background: white;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.8rem;
+      margin-top: 1.2rem;
+    }
+
+    .btn-primary {
+      background: #6f4e2e;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      cursor: pointer;
+    }

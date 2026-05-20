@@ -1,0 +1,38 @@
+body {
+  font-family: "Inter", sans-serif;
+  background: #f7facc;
+  color: #050503;
+}
+
+.font-display {
+  font-family: "Playfair Display", serif;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+animation: fadeUp 0.7s ease;
+}
+
+@keyframes floating {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.floating {
+  animation: floating 4s ease-in-out infinite;
+}

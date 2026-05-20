@@ -1,0 +1,48 @@
+body {
+        font-family: Inter, system-ui, sans-serif;
+        background: #f4f1e8;
+        color: #172013;
+      }
+      .app-bg {
+        background: linear-gradient(180deg, #f8f5ec 0%, #ece7d8 100%);
+      }
+      .brand {
+        background: #3f5f35;
+        color: #fff;
+      }
+      .brand-soft {
+        background: #e7eddc;
+        color: #2d4a25;
+      }
+      .gold {
+        background: #836527;
+        color: #fff;
+      }
+      .card {
+        background: #fffdf8;
+        border: 1px solid rgba(63, 95, 53, 0.14);
+        box-shadow: 0 10px 30px rgba(42, 50, 32, 0.07);
+      }
+      .menu-img {
+        aspect-ratio: 4 / 3;
+        background: #e7eddc;
+      }
+      .hide {
+        display: none !important;
+      }
+      .modal {
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.18s ease;
+      }
+      .modal.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .modal-box {
+        transform: translateY(12px);
+        transition: 0.18s ease;
+      }
+      .modal.open .modal-box {
+        transform: translateY(0);
+      }

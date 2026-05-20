@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Berkesan — Kasir</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/css/kasir.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
+</head>
+
+<body>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay" style="display:none;">
+  <div class="spinner"></div><span>Memuat…</span>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<div class="shell">
+
+  <!-- ════════════ SIDEBAR ════════════ -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-ico"><i class="fa-solid fa-mug-hot"></i></div>
+      <div>
+        <div class="sb-title">Berkesan</div>
+        <div class="sb-sub">Kasir Dashboard</div>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-section">Menu Kasir</div>
+      <button class="sb-item active" onclick="showSection('pesanan')">
+        <i class="fa-solid fa-list-check"></i> Pesanan Masuk
+        <span class="sb-badge" id="badge-pesanan">0</span>
+      </button>
+      <button class="sb-item" onclick="showSection('scan')">
+        <i class="fa-solid fa-qrcode"></i> Scan Barcode
+      </button>
+      <button class="sb-item" onclick="showSection('antrian')">
+        <i class="fa-solid fa-ticket"></i> Nomor Antrian
+        <span class="sb-badge" id="badge-antrian">0</span>
+      </button>
+      <button class="sb-item" onclick="showSection('riwayat')">
+        <i class="fa-solid fa-clock-rotate-left"></i> Riwayat
+      </button>
+    </nav>
+
+    <div class="sb-profile">
+      <div class="sb-profile-inner">
+        <div class="sb-avatar" id="sb-initial">K</div>
+        <div>
+          <div class="sb-name" id="sb-name">Kasir</div>
+          <div class="sb-role">Kasir</div>
+        </div>
+        <button class="sb-logout" onclick="handleLogout()" title="Logout">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════════ MAIN ════════════ -->
+  <main class="main">
+    <!-- Topbar -->
+    <div class="topbar">
+      <div>
+        <h2 id="page-title">Pesanan Masuk</h2>
+        <p id="page-sub">Kelola &amp; proses pesanan customer</p>
+      </div>
+      <div class="topbar-right">
+        <div class="realtime-pill">
+          <div class="pulse-dot"></div>
+          <span>Realtime</span>
+        </div>
+        <div class="clock-pill" id="clockDisplay">--:--</div>
+        <button class="topbar-btn" onclick="refreshCurrent()" title="Refresh">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ═══════ SECTION: PESANAN MASUK ═══════ -->
+      <div class="section active" id="section-pesanan">
+        <!-- Stats row -->
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-lbl">Menunggu</div>
+            <div class="stat-val" id="st-pending" style="color:var(--amber);">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl">Diproses</div>
+            <div class="stat-val" id="st-diproses" style="color:var(--brand);">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl">Selesai Hari Ini</div>
+            <div class="stat-val" id="st-selesai" style="color:#2a7a3a;">0</div>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="filter-row">
+          <button class="filter-btn active" onclick="filterOrders('all',this)">Semua</button>
+          <button class="filter-btn" onclick="filterOrders('pending',this)">Menunggu</button>
+          <button class="filter-btn" onclick="filterOrders('diproses',this)">Diproses</button>
+          <button class="filter-btn" onclick="filterOrders('selesai',this)">Selesai</button>
+          <button class="filter-btn" onclick="filterOrders('dibatalkan',this)">Dibatalkan</button>
+          <div class="filter-right">
+            <button class="btn btn-outline btn-sm" onclick="loadOrders()">
+              <i class="fa-solid fa-rotate-right"></i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Order cards -->
+        <div class="order-grid" id="orderGrid"></div>
+        <div class="empty" id="emptyOrders" style="display:none;">
+          <i class="fa-solid fa-inbox"></i>
+          <p>Belum ada pesanan</p>
+          <small>Pesanan baru akan muncul di sini secara realtime</small>
+        </div>
+      </div>
+
+      <!-- ═══════ SECTION: SCAN BARCODE ═══════ -->
+      <div class="section" id="section-scan">
+        <div class="scan-wrap">
+          <!-- Input manual -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-keyboard" style="color:var(--brand);margin-right:6px;"></i>Input Manual</h3>
+                <p>Ketik kode order atau nomor barcode</p>
+              </div>
+            </div>
+            <div class="input-row">
+              <input
+                id="manualOrderId"
+                type="text"
+                class="input-field"
+                placeholder="Contoh: ORD-20260519-001"
+                onkeypress="if(event.key==='Enter') lookupOrder()"
+              />
+              <button class="btn btn-primary" onclick="lookupOrder()">
+                <i class="fa-solid fa-magnifying-glass"></i> Cari
+              </button>
+            </div>
+          </div>
+
+          <!-- Scan kamera -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3><i class="fa-solid fa-camera" style="color:var(--brand);margin-right:6px;"></i>Scan via Kamera</h3>
+                <p>Arahkan kamera ke barcode / QR code customer</p>
+              </div>
+            </div>
+            <button class="btn btn-gold btn-full" style="padding:12px;" onclick="openScanOverlay()">
+              <i class="fa-solid fa-qrcode" style="font-size:16px;"></i>
+              Buka Scanner Kamera
+            </button>
+          </div>
+
+          <!-- Hasil lookup -->
+          <div id="lookupResult" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- ═══════ SECTION: ANTRIAN ═══════ -->
+      <div class="section" id="section-antrian">
+        <div class="antrian-wrap">
+          <!-- Display nomor antrian -->
+          <div class="queue-display">
+            <div class="queue-lbl">Nomor Antrian Dipanggil</div>
+            <div class="queue-circle-wrap">
+              <div class="queue-ring"></div>
+              <div class="queue-circle">
+                <span class="queue-num-big" id="currentQueue">—</span>
+              </div>
+            </div>
+            <div class="queue-sub" id="queueOrderCode">Belum ada panggilan</div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary" onclick="callNext()">
+                <i class="fa-solid fa-forward"></i> Panggil Berikutnya
+              </button>
+              <button class="btn btn-outline" onclick="resetQueue()" title="Reset antrian">
+                <i class="fa-solid fa-rotate-left"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Daftar antrian -->
+          <div class="queue-list-card">
+            <div class="queue-list-header">
+              <h3>Daftar Antrian</h3>
+              <span class="badge badge-diproses" id="queueCount">0 item</span>
+            </div>
+            <div class="queue-items" id="queueList"></div>
+            <div class="empty" id="emptyQueue" style="display:none;padding:24px 0;">
+              <i class="fa-solid fa-ticket" style="font-size:24px;"></i>
+              <p>Tidak ada antrian</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ SECTION: RIWAYAT ═══════ -->
+      <div class="section" id="section-riwayat">
+        <!-- Summary -->
+        <div class="stat-row" style="grid-template-columns:repeat(4,1fr);">
+          <div class="stat-card">
+            <div class="stat-lbl">Total Transaksi</div>
+            <div class="stat-val" id="rw-count">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl">Pendapatan</div>
+            <div class="stat-val" id="rw-total" style="color:var(--brand);">Rp 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl">QRIS</div>
+            <div class="stat-val" id="rw-qris" style="color:var(--gold);">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-lbl">Cash</div>
+            <div class="stat-val" id="rw-cash">0</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h3>Riwayat Transaksi Hari Ini</h3>
+              <p id="rw-date">—</p>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-outline btn-sm" onclick="loadRiwayat()">
+                <i class="fa-solid fa-rotate-right"></i> Refresh
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="printSummary()">
+                <i class="fa-solid fa-print"></i> Print
+              </button>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>Kode Order</th>
+                  <th>Pelanggan</th>
+                  <th>Item</th>
+                  <th>Total</th>
+                  <th>Bayar</th>
+                  <th>Status</th>
+                  <th>Waktu</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="historyTbody">
+                <tr><td colspan="8" class="empty" style="padding:32px 0;display:table-cell;text-align:center;color:var(--muted);">Memuat…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="empty" id="emptyHistory" style="display:none;">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <p>Belum ada transaksi hari ini</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div><!-- /shell -->
+
+<!-- ════════ SCAN CAMERA OVERLAY ════════ -->
+<div class="scan-overlay" id="scanOverlay" onclick="closeScanOverlay()">
+  <div class="scan-box" onclick="event.stopPropagation()">
+    <div class="scan-box-header">
+      <h3><i class="fa-solid fa-qrcode" style="color:var(--brand);margin-right:6px;"></i>Scan Barcode</h3>
+      <button class="modal-close" onclick="closeScanOverlay()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="scan-camera-area" id="scanCameraArea">
+      <video id="scanVideo" autoplay playsinline></video>
+      <div class="scan-crosshair">
+        <div class="scan-frame">
+          <span></span>
+          <div class="scan-line"></div>
+        </div>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px;">
+      Arahkan ke barcode / QR code customer
+    </p>
+  </div>
+</div>
+
+<!-- ════════ ORDER DETAIL MODAL ════════ -->
+<div class="modal-bg" id="orderModal" onclick="closeOrderModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Detail Pesanan</h3>
+      <button class="modal-close" onclick="closeOrderModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="orderModalContent"></div>
+  </div>
+</div>
+
+<!-- ════════ RECEIPT PRINT ════════ -->
+<div id="receiptPrint"></div>
+
+<script src="/js/api.config.js"></script>
+<script src="/js/kasir.js"></script>
+</body>
+</html>

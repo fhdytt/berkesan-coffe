@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berkesan Coffee | Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --cream:    #f7facc;
+            --lime:     #bfc56b;
+            --forest:   #63773c;
+            --brown:    #836527;
+            --dark:     #050503;
+        }
+
+        body { font-family: 'Inter', sans-serif; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .animate-float { animation: float 5s ease-in-out infinite; }
+        
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 119, 60, 0.4); border-radius: 10px; }
+    </style>
+</head>
+<body style="background-color: var(--dark);" class="min-h-screen flex items-center justify-center p-0 md:p-6">
+
+    <div class="relative z-10 w-full max-w-6xl flex flex-col md:flex-row backdrop-blur-sm md:rounded-[3rem] overflow-hidden shadow-2xl min-h-[90vh] md:min-h-[700px]"
+         style="background: rgba(5,5,3,0.6); border: 1px solid rgba(191,197,107,0.15);">
+        
+        <!-- Left: Image Panel -->
+        <div class="relative w-full md:w-1/2 h-64 md:h-auto overflow-hidden group">
+            <div class="absolute inset-0 z-10 md:bg-gradient-to-r"
+                 style="background: linear-gradient(to top, var(--dark) 0%, transparent 60%);"></div>
+            
+            <img src="/assets/img/kopi.jpeg" 
+                 alt="Coffee Background" 
+                 class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+            
+            <!-- Overlay tint -->
+            <div class="absolute inset-0 z-[5]" style="background: rgba(99,119,60,0.15);"></div>
+
+            <div class="absolute inset-0 z-20 flex flex-col justify-end md:justify-center p-8 md:p-12">
+                <div class="animate-float">
+                    <div class="inline-block p-4 rounded-2xl mb-4 shadow-xl"
+                         style="background-color: var(--forest);">
+                        <i class="fas fa-mug-hot text-3xl" style="color: var(--cream);"></i>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl font-black leading-none mb-2"
+                        style="color: var(--cream);">
+                        BERKESAN<br><span style="color: var(--lime);">COFFEE</span>
+                    </h1>
+                    <p class="text-sm md:text-lg max-w-xs" style="color: rgba(247,250,204,0.65);">
+                        Nikmati setiap tegukan yang memberikan kesan mendalam.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Menu Panel -->
+        <div class="w-full md:w-1/2 flex flex-col p-8 md:p-16 custom-scroll overflow-y-auto"
+             style="background: rgba(5,5,3,0.45);">
+            
+            <div class="flex justify-between items-center mb-10">
+                <span class="font-bold tracking-widest text-xs uppercase italic" style="color: var(--lime);">Experience the taste</span>
+                <div class="text-xs px-3 py-1 rounded-full"
+                     style="color: rgba(191,197,107,0.6); background: rgba(99,119,60,0.1); border: 1px solid rgba(191,197,107,0.15);">
+                    <i class="far fa-clock mr-1"></i> <span id="time">16:00</span>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                
+                <!-- Order Now -->
+                <a href="/pages/order.html" class="group flex items-center p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
+                   style="background: rgba(131,101,39,0.12); border: 1px solid rgba(131,101,39,0.25);"
+                   onmouseover="this.style.background='var(--brown)'; this.style.borderColor='var(--brown)';"
+                   onmouseout="this.style.background='rgba(131,101,39,0.12)'; this.style.borderColor='rgba(131,101,39,0.25)';">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl transition-colors"
+                         style="background: rgba(131,101,39,0.25); color: var(--lime);">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h3 class="font-bold" style="color: var(--cream);">Order Now</h3>
+                        <p class="text-xs" style="color: rgba(247,250,204,0.45);">Pesan cepat via aplikasi</p>
+                    </div>
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1" style="color: rgba(191,197,107,0.4);"></i>
+                </a>
+
+                <!-- About Us -->
+                <a href="/pages/about.html" class="group flex items-center p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
+                   style="background: rgba(99,119,60,0.12); border: 1px solid rgba(99,119,60,0.25);"
+                   onmouseover="this.style.background='var(--forest)'; this.style.borderColor='var(--forest)';"
+                   onmouseout="this.style.background='rgba(99,119,60,0.12)'; this.style.borderColor='rgba(99,119,60,0.25)';">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl transition-colors"
+                         style="background: rgba(99,119,60,0.25); color: var(--lime);">
+                        <i class="fas fa-info-circle text-xl"></i>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h3 class="font-bold" style="color: var(--cream);">About Us</h3>
+                        <p class="text-xs" style="color: rgba(247,250,204,0.45);">Ketahui cerita dibalik layar</p>
+                    </div>
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1" style="color: rgba(191,197,107,0.4);"></i>
+                </a>
+
+                <!-- Our Location -->
+                <a href="https://maps.app.goo.gl/H3Qmq6hthP3yPEUf6" class="group flex items-center p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
+                   style="background: rgba(191,197,107,0.08); border: 1px solid rgba(191,197,107,0.2);"
+                   onmouseover="this.style.background='rgba(191,197,107,0.2)'; this.style.borderColor='var(--lime)';"
+                   onmouseout="this.style.background='rgba(191,197,107,0.08)'; this.style.borderColor='rgba(191,197,107,0.2)';">
+                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl transition-colors"
+                         style="background: rgba(191,197,107,0.15); color: var(--lime);">
+                        <i class="fas fa-map-marked-alt text-xl"></i>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <h3 class="font-bold" style="color: var(--cream);">Our Location</h3>
+                        <p class="text-xs" style="color: rgba(247,250,204,0.45);">Temukan kedai terdekat</p>
+                    </div>
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1" style="color: rgba(191,197,107,0.4);"></i>
+                </a>
+
+                <!-- ShopeeFood Badge -->
+                <div class="p-5 rounded-3xl flex items-center justify-between"
+                     style="background: rgba(131,101,39,0.1); border: 1px solid rgba(131,101,39,0.3);">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl"
+                             style="background-color: var(--brown); color: var(--cream);">
+                            <i class="fab fa-gripfire"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h4 class="text-sm font-bold tracking-wide" style="color: var(--cream);">ShopeeFood</h4>
+                            <p class="text-xs" style="color: var(--lime);">Berkesan Coffee</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-1 rounded-md uppercase"
+                          style="background: rgba(131,101,39,0.25); color: var(--lime);">Promo</span>
+                </div>
+            </div>
+
+            <!-- Contact -->
+             <a href="https://wa.me/6287885190765">
+            <div class="mt-auto pt-10 grid grid-cols-1 gap-4">
+                <div class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                         style="background: rgba(99,119,60,0.15); color: var(--lime); border: 1px solid rgba(99,119,60,0.3);">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="text-[11px]">
+                        <p class="font-semibold" style="color: var(--cream);">WhatsApp Admin</p>
+                        <p style="color: rgba(247,250,204,0.35);">Mon-Sun (08:00-22:00 WIB)</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                         style="background: rgba(131,101,39,0.15); color: var(--lime); border: 1px solid rgba(131,101,39,0.3);">
+                        <i class="far fa-envelope"></i>
+                    </div>
+                    <div class="text-[11px]">
+                        <p class="font-semibold italic truncate" style="color: var(--cream);">bulk & event order (087885190765)</p>
+                        <p style="color: rgba(247,250,204,0.35);">Mon-Sun (08:00-20:00 WIB)</p>
+                    </div>
+                </div>
+            </div>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- Background blobs -->
+    <div class="fixed inset-0 pointer-events-none -z-10">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full"
+             style="background: rgba(99,119,60,0.12); filter: blur(120px);"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full"
+             style="background: rgba(131,101,39,0.1); filter: blur(120px);"></div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('time').innerText = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+    </script>
+</body>
+</html>
