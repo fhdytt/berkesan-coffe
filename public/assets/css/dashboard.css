@@ -354,3 +354,84 @@
     .add-meja-card:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-pale); }
     .add-meja-card i { font-size: 28px; }
     .add-meja-card span { font-size: 12px; font-weight: 600; }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+
+    /* Hamburger button (hidden on desktop) */
+    .hamburger {
+      display: none;
+      background: rgba(255,255,255,.15);
+      border: none; color: #fff;
+      width: 34px; height: 34px;
+      border-radius: 9px; font-size: 14px;
+      cursor: pointer; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Sidebar overlay backdrop */
+    .sidebar-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 29;
+    }
+    .sidebar-backdrop.open { display: block; }
+
+    @media (max-width: 768px) {
+      /* Show hamburger */
+      .hamburger { display: flex; }
+
+      /* Sidebar slides in from left */
+      .sidebar {
+        position: fixed; left: 0; top: 0; bottom: 0;
+        z-index: 30;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        width: 230px;
+      }
+      .sidebar.open { transform: translateX(0); }
+
+      /* Main takes full width */
+      .main { width: 100%; }
+
+      /* Topbar */
+      .topbar { padding: 12px 14px; gap: 8px; }
+      .topbar h2 { font-size: 15px; }
+
+      /* Content padding */
+      .content { padding: 12px 12px; gap: 10px; }
+
+      /* KPI grid: 2 columns on tablet, 1 on phone */
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Mid row: stack */
+      .mid-row { grid-template-columns: 1fr; }
+
+      /* Bot rows: stack */
+      .bot-row   { grid-template-columns: 1fr; }
+      .bot-row-3 { grid-template-columns: 1fr; }
+
+      /* Rekap KPI: 2 cols */
+      .rekap-kpi { grid-template-columns: repeat(2, 1fr); }
+
+      /* Stok grid: 2 cols */
+      .stok-grid { grid-template-columns: repeat(2, 1fr); }
+
+      /* Laporan summary: 1 col */
+      .lap-summary { grid-template-columns: 1fr; }
+
+      /* Form row: stack */
+      .form-row { grid-template-columns: 1fr; }
+
+      /* In-tabs: wrap */
+      .in-tabs { flex-wrap: wrap; width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .kpi-grid  { grid-template-columns: 1fr 1fr; }
+      .rekap-kpi { grid-template-columns: 1fr 1fr; }
+      .stok-grid { grid-template-columns: 1fr; }
+      .topbar-btns { gap: 4px; }
+    }

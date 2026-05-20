@@ -504,3 +504,68 @@
     .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; box-shadow: var(--shadow); }
     .stat-lbl  { font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
     .stat-val  { font-size: 18px; font-weight: 800; margin-top: 4px; }
+
+    /* ══════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════ */
+
+    .hamburger {
+      display: none;
+      background: rgba(255,255,255,.15);
+      border: none; color: #fff;
+      width: 34px; height: 34px;
+      border-radius: 9px; font-size: 14px;
+      cursor: pointer; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-backdrop {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 29;
+    }
+    .sidebar-backdrop.open { display: block; }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+
+      .sidebar {
+        position: fixed; left: 0; top: 0; bottom: 0;
+        z-index: 30;
+        transform: translateX(-100%);
+        transition: transform .25s ease;
+        width: 230px;
+      }
+      .sidebar.open { transform: translateX(0); }
+
+      .main { width: 100%; }
+
+      .topbar { padding: 12px 14px; gap: 8px; }
+      .topbar h2 { font-size: 15px; }
+      /* Hide clock/realtime pill on small screens */
+      .realtime-pill, .clock-pill { display: none; }
+
+      .content { padding: 12px 12px; }
+
+      /* Stat row: 2 cols */
+      .stat-row { grid-template-columns: repeat(2, 1fr); }
+
+      /* Antrian: stack */
+      .antrian-wrap { grid-template-columns: 1fr; }
+
+      /* Order grid: 1 col */
+      .order-grid { grid-template-columns: 1fr; }
+
+      /* Filter row: wrap */
+      .filter-row { flex-wrap: wrap; }
+      .filter-right { margin-left: 0; width: 100%; }
+
+      /* Scan wrap: full width */
+      .scan-wrap { max-width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .stat-row { grid-template-columns: repeat(2, 1fr); }
+      .topbar-right { gap: 4px; }
+    }

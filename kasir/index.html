@@ -21,6 +21,7 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
 <div class="shell">
 
   <!-- ════════════ SIDEBAR ════════════ -->
@@ -69,9 +70,14 @@
   <main class="main">
     <!-- Topbar -->
     <div class="topbar">
-      <div>
-        <h2 id="page-title">Pesanan Masuk</h2>
-        <p id="page-sub">Kelola &amp; proses pesanan customer</p>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div>
+          <h2 id="page-title">Pesanan Masuk</h2>
+          <p id="page-sub">Kelola &amp; proses pesanan customer</p>
+        </div>
       </div>
       <div class="topbar-right">
         <div class="realtime-pill">
@@ -316,5 +322,11 @@
 
 <script src="/public/js/api.config.js"></script>
 <script src="/public/js/kasir.js"></script>
+<script>
+  function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('open');
+    document.querySelector('.sidebar-backdrop').classList.toggle('open');
+  }
+</script>
 </body>
 </html>
