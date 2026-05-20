@@ -439,6 +439,23 @@ function callNext() {
   document.getElementById('currentQueue').textContent = number;
   document.getElementById('queueOrderCode').textContent = `${next.customer_name || next.order_code}${next.table_number ? ' - Meja ' + next.table_number : ''}`;
   showToast(`Memanggil antrian ${number}`);
+  announceQueue(number);
+}
+
+function announceQueue(number) {
+  if (!window.speechSynthesis) return;
+  // Ubah "A01" → "A 0 1" agar dibaca per karakter, atau bisa juga "A nol satu"
+  // Kita buat teks yang lebih natural: "Nomor antrian A 0 1, silakan menuju kasir"
+  const digits = number.slice(1); // "01"
+  const spoken = number[0] + ' ' + digits.split('').join(' '); // "A 0 1"
+  const text = `Nomor antrian ${spoken}, silahkan mengambil pesanan`;
+
+  window.speechSynthesis.cancel(); // batalkan suara sebelumnya jika masih berjalan
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'id-ID';
+  utter.rate = 0.9;
+  utter.pitch = 1;
+  window.speechSynthesis.speak(utter);
 }
 
 function resetQueue() {
