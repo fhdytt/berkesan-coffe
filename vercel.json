@@ -1,31 +1,12 @@
 {
-  "buildCommand": "",
   "outputDirectory": ".",
-  "cleanUrls": true,
-  "rewrites": [
-    {
-      "source": "/",
-      "destination": "/index.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin/index.html"
-    },
-    {
-      "source": "/kasir",
-      "destination": "/kasir/index.html"
-    },
-    {
-      "source": "/about",
-      "destination": "/public/pages/about.html"
-    },
-    {
-      "source": "/login",
-      "destination": "/public/pages/login.html"
-    },
-    {
-      "source": "/order",
-      "destination": "/public/pages/order.html"
-    }
+  "routes": [
+    { "src": "/order", "dest": "/public/pages/order.html" },
+    { "src": "/about", "dest": "/public/pages/about.html" },
+    { "src": "/login", "dest": "/public/pages/login.html" },
+    { "src": "/admin", "dest": "/admin/index.html" },
+    { "src": "/kasir", "dest": "/kasir/index.html" },
+    { "src": "/", "dest": "/index.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
