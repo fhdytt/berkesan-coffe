@@ -83,9 +83,7 @@ function statusBadge(st) {
 }
 
 function queueNo(index) {
-  // index relatif terhadap counter harian agar berlanjut sepanjang hari
-  const base = _getQueueCounter();
-  return 'A' + String(base + index + 1).padStart(2, '0');
+  return 'A' + String(index + 1).padStart(2, '0');
 }
 
 /* ═══════════════════════════════
@@ -454,10 +452,10 @@ function callNext() {
     return;
   }
   const next = _queueOrders.find(o => o.status === 'diproses') || _queueOrders[0];
-  const index = Math.max(0, _queueOrders.findIndex(o => o.id === next.id));
-  const number = queueNo(index);
-  // Simpan posisi terakhir yang dipanggil
-  _setQueueCounter(_getQueueCounter() + index);
+  // Increment counter harian lalu gunakan sebagai nomor panggilan
+  const count = _getQueueCounter() + 1;
+  _setQueueCounter(count);
+  const number = 'A' + String(count).padStart(2, '0');
   _currentQNum = number;
   document.getElementById('currentQueue').textContent = number;
   document.getElementById('queueOrderCode').textContent = `${next.customer_name || next.order_code}${next.table_number ? ' - Meja ' + next.table_number : ''}`;
@@ -470,9 +468,10 @@ function callSpecific() {
   const n = parseInt(input.value);
   if (!n || n < 1) { showToast('Masukkan nomor antrian yang valid', 'warn'); return; }
   const number = 'A' + String(n).padStart(2, '0');
-  // Cari order yang cocok berdasarkan posisi di antrian
-  const order = _queueOrders[n - _getQueueCounter() - 1];
+  // Cari order berdasarkan urutan di daftar (index = n-1)
+  const order = _queueOrders[n - 1];
   const customerName = order?.customer_name || '';
+  _setQueueCounter(Math.max(_getQueueCounter(), n)); // update counter jika perlu
   _currentQNum = number;
   document.getElementById('currentQueue').textContent = number;
   document.getElementById('queueOrderCode').textContent = customerName
