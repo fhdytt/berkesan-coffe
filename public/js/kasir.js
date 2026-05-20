@@ -110,7 +110,7 @@ function refreshCurrent() { showSection(_currentSection); }
    FETCH WRAPPER
 ═══════════════════════════════ */
 async function apiFetch(url, opts = {}) {
-  const res = await fetch(url, { headers: { 'Content-Type': 'application/json' }, ...opts });
+  const res = await fetch(url, { headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' }, ...opts });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const j = await res.json();
   if (!j.success) throw new Error(j.message || 'Server error');

@@ -17,7 +17,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
   try {
     const response = await fetch(`${BACKEND_URL}/api/auth/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
       body: JSON.stringify({ username, password }),
     });
 

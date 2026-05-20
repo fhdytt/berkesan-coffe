@@ -33,7 +33,7 @@ function setTable(value) {
 
 async function apiJson(url, options = {}) {
   const res = await fetch(url, {
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "ngrok-skip-browser-warning": "true" },
     ...options,
   });
   const json = await res.json();

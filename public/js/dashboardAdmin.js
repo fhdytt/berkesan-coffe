@@ -124,6 +124,7 @@
        FETCH WRAPPER
     ═══════════════════════════════════════════ */
     async function apiFetch(url, options = {}) {
+      options.headers = { 'ngrok-skip-browser-warning': 'true', ...options.headers };
       const res = await fetch(url, options);
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const json = await res.json();
