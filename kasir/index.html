@@ -200,6 +200,15 @@
                 <i class="fa-solid fa-rotate-left"></i>
               </button>
             </div>
+            <!-- Panggil nomor tertentu -->
+            <div style="display:flex;gap:6px;margin-top:4px;">
+              <input id="callSpecificInput" type="number" min="1" placeholder="No. tertentu"
+                class="input-field" style="width:130px;padding:7px 10px;font-size:13px;"
+                onkeypress="if(event.key==='Enter') callSpecific()" />
+              <button class="btn btn-outline" onclick="callSpecific()">
+                <i class="fa-solid fa-bullhorn"></i> Panggil
+              </button>
+            </div>
           </div>
 
           <!-- Daftar antrian -->

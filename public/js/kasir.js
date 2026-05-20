@@ -9,6 +9,25 @@ let _currentQNum    = null;
 let _scanReader     = null;
 let _autoRefresh    = null;
 
+/* ── Queue counter: persist per hari via localStorage ── */
+const _QUEUE_KEY = 'berkesan_queue_counter';
+
+function _todayStr() {
+  return new Date().toISOString().slice(0, 10); // "2026-05-20"
+}
+
+function _getQueueCounter() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(_QUEUE_KEY) || '{}');
+    if (raw.date !== _todayStr()) return 0; // hari baru → mulai dari 0
+    return raw.count || 0;
+  } catch { return 0; }
+}
+
+function _setQueueCounter(n) {
+  localStorage.setItem(_QUEUE_KEY, JSON.stringify({ date: _todayStr(), count: n }));
+}
+
 /* ═══════════════════════════════
    UTILITY
 ═══════════════════════════════ */
@@ -64,7 +83,9 @@ function statusBadge(st) {
 }
 
 function queueNo(index) {
-  return 'A' + String(index + 1).padStart(2, '0');
+  // index relatif terhadap counter harian agar berlanjut sepanjang hari
+  const base = _getQueueCounter();
+  return 'A' + String(base + index + 1).padStart(2, '0');
 }
 
 /* ═══════════════════════════════
@@ -435,20 +456,47 @@ function callNext() {
   const next = _queueOrders.find(o => o.status === 'diproses') || _queueOrders[0];
   const index = Math.max(0, _queueOrders.findIndex(o => o.id === next.id));
   const number = queueNo(index);
+  // Simpan posisi terakhir yang dipanggil
+  _setQueueCounter(_getQueueCounter() + index);
   _currentQNum = number;
   document.getElementById('currentQueue').textContent = number;
   document.getElementById('queueOrderCode').textContent = `${next.customer_name || next.order_code}${next.table_number ? ' - Meja ' + next.table_number : ''}`;
   showToast(`Memanggil antrian ${number}`);
-  announceQueue(number);
+  announceQueue(number, next.customer_name);
 }
 
-function announceQueue(number) {
+function callSpecific() {
+  const input = document.getElementById('callSpecificInput');
+  const n = parseInt(input.value);
+  if (!n || n < 1) { showToast('Masukkan nomor antrian yang valid', 'warn'); return; }
+  const number = 'A' + String(n).padStart(2, '0');
+  // Cari order yang cocok berdasarkan posisi di antrian
+  const order = _queueOrders[n - _getQueueCounter() - 1];
+  const customerName = order?.customer_name || '';
+  _currentQNum = number;
+  document.getElementById('currentQueue').textContent = number;
+  document.getElementById('queueOrderCode').textContent = customerName
+    ? `${customerName}${order?.table_number ? ' - Meja ' + order.table_number : ''}`
+    : `Antrian ${number}`;
+  showToast(`Memanggil antrian ${number}`);
+  announceQueue(number, customerName);
+  input.value = '';
+}
+
+function resetQueue() {
+  if (!confirm('Reset semua nomor antrian? Nomor akan mulai dari 1 lagi besok.')) return;
+  _setQueueCounter(0);
+  localStorage.removeItem(_QUEUE_KEY);
+  _currentQNum = null;
+  document.getElementById('currentQueue').textContent = '—';
+  document.getElementById('queueOrderCode').textContent = 'Belum ada panggilan';
+  showToast('Antrian direset');
+}
   if (!window.speechSynthesis) return;
-  // Ubah "A01" → "A 0 1" agar dibaca per karakter, atau bisa juga "A nol satu"
-  // Kita buat teks yang lebih natural: "Nomor antrian A 0 1, silakan menuju kasir"
-  const digits = number.slice(1); // "01"
-  const spoken = number[0] + ' ' + digits.split('').join(' '); // "A 0 1"
-  const text = `Nomor antrian ${spoken}, silahkan mengambil pesanan`;
+  const digits = number.slice(1);
+  const spoken = number[0] + ' ' + digits.split('').join(' ');
+  const namePart = customerName ? `, atas nama ${customerName},` : ',';
+  const text = `Nomor antrian ${spoken}${namePart} silakan mengambil pesanan`;
 
   window.speechSynthesis.cancel(); // batalkan suara sebelumnya jika masih berjalan
   const utter = new SpeechSynthesisUtterance(text);
