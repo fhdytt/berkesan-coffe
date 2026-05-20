@@ -251,11 +251,17 @@
         </div>
 
         <p
-          class="text-xs text-[#836527] bg-[#836527]/10 rounded-xl px-3 py-2 mb-5"
+          class="text-xs text-[#836527] bg-[#836527]/10 rounded-xl px-3 py-2 mb-3"
         >
           <i class="fa-solid fa-circle-info mr-1"></i>
           Masukkan jumlah sesuai total pesanan saat scan QRIS
         </p>
+        <button
+          onclick="downloadQrisImage()"
+          class="w-full py-2 rounded-xl border border-[#3f5f35]/20 font-bold text-[#3f5f35] text-sm mb-5 flex items-center justify-center gap-2"
+        >
+          <i class="fa-solid fa-download"></i>Download Gambar QRIS
+        </button>
 
         <button
           onclick="showOrderCode()"

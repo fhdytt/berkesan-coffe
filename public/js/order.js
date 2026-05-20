@@ -239,6 +239,15 @@ function closeQrisModal() {
   document.getElementById("qrisModal").classList.remove("open");
 }
 
+function downloadQrisImage() {
+  const img = document.getElementById("qrisImage");
+  if (!img || !img.src) return alert("Gambar QRIS tidak tersedia.");
+  const link = document.createElement("a");
+  link.download = "qris-berkesan.png";
+  link.href = img.src;
+  link.click();
+}
+
 // ─── Modal 3: Kode Order (QR) ─────────────────────────────────
 
 function showOrderCode() {
