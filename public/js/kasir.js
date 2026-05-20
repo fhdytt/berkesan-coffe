@@ -86,6 +86,29 @@ function queueNo(index) {
   return 'A' + String(index + 1).padStart(2, '0');
 }
 
+/* Ambil/buat nomor antrian permanen per order_code, persist di localStorage */
+const _ORDER_NUM_KEY = 'berkesan_order_nums';
+
+function _getOrderNums() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(_ORDER_NUM_KEY) || '{}');
+    // Reset jika beda hari
+    if (raw._date !== _todayStr()) return { _date: _todayStr() };
+    return raw;
+  } catch { return { _date: _todayStr() }; }
+}
+
+function _assignOrderNum(orderCode) {
+  const nums = _getOrderNums();
+  if (!nums[orderCode]) {
+    // Hitung berapa order yang sudah punya nomor hari ini
+    const count = Object.keys(nums).filter(k => k !== '_date').length + 1;
+    nums[orderCode] = count;
+    localStorage.setItem(_ORDER_NUM_KEY, JSON.stringify(nums));
+  }
+  return nums[orderCode];
+}
+
 /* ═══════════════════════════════
    CLOCK
 ═══════════════════════════════ */
@@ -434,16 +457,18 @@ function renderAntrian(orders) {
     return;
   }
   empty.style.display = 'none';
-  list.innerHTML = orders.map((o, i) => `
+  list.innerHTML = orders.map((o) => {
+    const num = 'A' + String(_assignOrderNum(o.order_code)).padStart(2, '0');
+    return `
     <div class="queue-item ${o.status === 'pending' ? 'wait' : ''}">
-      <div class="queue-item-num">${queueNo(i)}</div>
+      <div class="queue-item-num">${num}</div>
       <div class="queue-item-detail">
         <div class="queue-item-code">${o.customer_name||'—'}${o.table_number ? ' • Meja ' + o.table_number : ''}</div>
         <div class="queue-item-meta">${o.order_code} • ${payIcon(o.payment_method)}</div>
       </div>
       <div class="queue-item-status">${statusBadge(o.status)}</div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function callNext() {
@@ -486,10 +511,25 @@ function resetQueue() {
   if (!confirm('Reset semua nomor antrian? Nomor akan mulai dari 1 lagi besok.')) return;
   _setQueueCounter(0);
   localStorage.removeItem(_QUEUE_KEY);
+  localStorage.removeItem(_ORDER_NUM_KEY);
   _currentQNum = null;
   document.getElementById('currentQueue').textContent = '—';
   document.getElementById('queueOrderCode').textContent = 'Belum ada panggilan';
   showToast('Antrian direset');
+}
+
+function announceQueue(number, customerName) {
+  if (!window.speechSynthesis) return;
+  const digits = number.slice(1);
+  const spoken = number[0] + ' ' + digits.split('').join(' ');
+  const namePart = customerName ? `, atas nama ${customerName},` : ',';
+  const text = `Nomor antrian ${spoken}${namePart} silakan mengambil pesanan`;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'id-ID';
+  utter.rate = 0.9;
+  utter.pitch = 1;
+  window.speechSynthesis.speak(utter);
 }
 
 /* ═══════════════════════════════
