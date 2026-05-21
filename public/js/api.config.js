@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://jon-seafood-telecom-jesse.trycloudflare.com";
+const BACKEND_URL = "https://impish-harpist-parcel.ngrok-free.dev";
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
