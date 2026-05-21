@@ -1,8 +1,7 @@
-const BACKEND_URL = "https://impish-harpist-parcel.ngrok-free.dev";
+const BACKEND_URL = "https://jon-seafood-telecom-jesse.trycloudflare.com";
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
-  "ngrok-skip-browser-warning": "true",
 };
 
 async function apiFetch(path, options = {}) {
