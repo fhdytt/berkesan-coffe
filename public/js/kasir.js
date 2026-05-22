@@ -1,3 +1,14 @@
+/* ── Auth Guard ── */
+(function () {
+  const token = localStorage.getItem('token');
+  const user  = JSON.parse(localStorage.getItem('user') || 'null');
+  if (!token || !user || !['kasir', 'admin', 'dev'].includes(user.role)) {
+    window.location.replace('/login');
+  } else {
+    document.body.style.display = '';
+  }
+})();
+
 /* ═══════════════════════════════
    CONFIG
 ═══════════════════════════════ */
@@ -721,7 +732,11 @@ function printSummary() {
    LOGOUT
 ═══════════════════════════════ */
 function handleLogout() {
-  if (confirm('Yakin ingin logout?')) window.location.href = '/login';
+  if (confirm('Yakin ingin logout?')) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.replace('/login');
+  }
 }
 
 /* ═══════════════════════════════

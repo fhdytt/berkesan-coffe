@@ -4,6 +4,8 @@
   const user  = JSON.parse(localStorage.getItem('user') || 'null');
   if (!token || !user || !['admin', 'dev'].includes(user.role)) {
     window.location.replace('/login');
+  } else {
+    document.body.style.display = '';
   }
 })();
 
@@ -926,7 +928,11 @@
        LOGOUT
     ═══════════════════════════════════════════ */
     function handleLogout() {
-      if (confirm('Yakin ingin logout?')) window.location.href = '/login';
+      if (confirm('Yakin ingin logout?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.replace('/login');
+      }
     }
 
     /* ═══════════════════════════════════════════
