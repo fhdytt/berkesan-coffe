@@ -74,20 +74,29 @@
 
         <div class="field">
           <label>Captcha</label>
-          
-          <div class="captcha-text" style="margin-bottom: 8px; font-weight: bold; font-size: 1.1rem;">
-            <span id="captchaQuestion"></span>
-          </div>
 
-        <div class="field">
-          <label>Captcha</label>
-          
-          <div class="captcha-row">
-            <div class="captcha-question-box">
-              <span id="captchaQuestion">14 + 7</span> =
+          <div
+            class="captcha-container"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              margin-top: 8px;
+            "
+          >
+            <div
+              class="captcha-text"
+              style="
+                font-weight: bold;
+                font-size: 1.1rem;
+                color: #e2e8f0;
+                white-space: nowrap;
+              "
+            >
+              <span id="captchaQuestion"></span> =
             </div>
-            
-            <div class="input-wrap">
+
+            <div class="input-wrap" style="flex: 1; margin-top: 0">
               <i class="fa-solid fa-calculator prefix"></i>
               <input
                 type="number"
