@@ -74,9 +74,13 @@
 
         <div class="field">
           <label>Captcha</label>
-          <div class="input-wrap flex items-center gap-2">
+          
+          <div class="captcha-text" style="margin-bottom: 8px; font-weight: bold; font-size: 1.1rem;">
+            <span id="captchaQuestion"></span>
+          </div>
+
+          <div class="input-wrap">
             <i class="fa-solid fa-calculator prefix"></i>
-            <span id="captchaQuestion" class="font-bold mx-1"></span>
             <input
               type="number"
               id="captchaInput"
