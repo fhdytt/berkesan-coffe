@@ -269,6 +269,9 @@
           <button class="sb-item" onclick="showPage('antrean')">
             <i class="fa-solid fa-ticket"></i> Antrean Aktif
           </button>
+          <button class="sb-item" onclick="showPage('users')">
+            <i class="fa-solid fa-users-gear"></i> Kelola User Kasir
+          </button>
         </nav>
 
         <div class="sb-profile">
@@ -992,6 +995,66 @@
           </div>
         </div>
       </main>
+    </div>
+
+        <!-- ── PAGE: USERS ── -->
+        <div class="content" id="page-users" style="display: none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div>
+              <h3 style="font-size:14px;font-weight:700;">User Kasir</h3>
+              <p style="font-size:11px;color:var(--muted);margin-top:2px;">Kelola akun kasir yang bisa login</p>
+            </div>
+            <button class="btn-refresh" onclick="openModalUser()" style="background:#2d6a4f;color:#fff;border:none;">
+              <i class="fa-solid fa-plus"></i> Tambah User
+            </button>
+          </div>
+          <div class="card">
+            <div style="overflow-x:auto;">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Nama</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Dibuat</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="usersTbody">
+                  <tr><td colspan="6" class="empty">Memuat…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- ══ MODAL: TAMBAH USER KASIR ══ -->
+    <div id="modalUser" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:14px;padding:28px 24px;width:100%;max-width:400px;margin:16px;">
+        <h3 style="margin:0 0 18px;font-size:16px;">Tambah User Kasir</h3>
+        <div id="modalUserErr" style="display:none;color:#e53e3e;font-size:13px;margin-bottom:12px;"></div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div>
+            <label style="font-size:13px;font-weight:600;">Nama</label>
+            <input id="uName" type="text" placeholder="Nama lengkap" style="width:100%;margin-top:4px;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;" />
+          </div>
+          <div>
+            <label style="font-size:13px;font-weight:600;">Username</label>
+            <input id="uUsername" type="text" placeholder="Username login" style="width:100%;margin-top:4px;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;" />
+          </div>
+          <div>
+            <label style="font-size:13px;font-weight:600;">Password</label>
+            <input id="uPassword" type="password" placeholder="Password" style="width:100%;margin-top:4px;padding:9px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;box-sizing:border-box;" />
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;">
+          <button onclick="closeModalUser()" style="padding:9px 18px;border:1px solid #e2e8f0;border-radius:8px;background:#fff;cursor:pointer;font-size:13px;">Batal</button>
+          <button onclick="submitUser()" style="padding:9px 18px;border:none;border-radius:8px;background:#2d6a4f;color:#fff;cursor:pointer;font-size:13px;font-weight:600;">Simpan</button>
+        </div>
+      </div>
     </div>
 
     <script src="/public/js/api.config.js"></script>

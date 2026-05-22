@@ -1,3 +1,15 @@
+let _captchaAnswer = 0;
+
+function _genCaptcha() {
+  const a = Math.floor(Math.random() * 10) + 1;
+  const b = Math.floor(Math.random() * 10) + 1;
+  _captchaAnswer = a + b;
+  document.getElementById('captchaQuestion').textContent = `${a} + ${b} = ?`;
+  document.getElementById('captchaInput').value = '';
+}
+
+_genCaptcha();
+
 document.querySelector("form").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -5,10 +17,18 @@ document.querySelector("form").addEventListener("submit", async (e) => {
     .querySelector('input[name="username"]')
     .value.trim();
   const password = document.querySelector('input[name="password"]').value;
+  const captchaVal = parseInt(document.getElementById('captchaInput').value, 10);
   const errorDiv = document.getElementById("errorMsg");
   const submitBtn = e.target.querySelector('button[type="submit"]');
 
   errorDiv.classList.add("hidden");
+
+  if (captchaVal !== _captchaAnswer) {
+    document.getElementById('errorText').textContent = 'Jawaban captcha salah, coba lagi';
+    errorDiv.classList.remove('hidden');
+    _genCaptcha();
+    return;
+  }
 
   submitBtn.disabled = true;
   submitBtn.innerHTML =
@@ -39,6 +59,7 @@ document.querySelector("form").addEventListener("submit", async (e) => {
     } else {
       errorDiv.textContent = data.error || "Login gagal, coba lagi";
       errorDiv.classList.remove("hidden");
+      _genCaptcha();
     }
   } catch (err) {
     errorDiv.textContent =

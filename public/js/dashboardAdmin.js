@@ -1,3 +1,12 @@
+/* ── Auth Guard ── */
+(function () {
+  const token = localStorage.getItem('token');
+  const user  = JSON.parse(localStorage.getItem('user') || 'null');
+  if (!token || !user || !['admin', 'dev'].includes(user.role)) {
+    window.location.replace('/login');
+  }
+})();
+
     window.addEventListener("load", () => {
         if (!window.QRCode) {
           const script = document.createElement("script");
@@ -88,11 +97,11 @@
     let currentPage = 'dashboard';
 
     function showPage(page) {
-      ['dashboard','rekap','stok','laporan','menu','meja','antrean'].forEach(p => {
+      ['dashboard','rekap','stok','laporan','menu','meja','antrean','users'].forEach(p => {
         document.getElementById('page-'+p).style.display = p === page ? 'flex' : 'none';
       });
       document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
-      const idx = { dashboard:0, rekap:1, stok:2, laporan:3, menu:4, meja:5, antrean:6 };
+      const idx = { dashboard:0, rekap:1, stok:2, laporan:3, menu:4, meja:5, antrean:6, users:7 };
       const btns = document.querySelectorAll('.sb-item');
       if (btns[idx[page]]) btns[idx[page]].classList.add('active');
 
@@ -104,6 +113,7 @@
         menu:      ['Kelola Menu', 'Tambah, edit, dan hapus item menu'],
         meja:      ['Meja & QR Code', 'Generate dan kelola QR Code per meja'],
         antrean:   ['Antrean Aktif', 'Monitor pesanan kasir real-time'],
+        users:     ['User Kasir', 'Kelola akun kasir yang bisa login'],
       };
       document.getElementById('page-title').textContent = titles[page][0];
       document.getElementById('page-sub').textContent   = titles[page][1];
@@ -116,6 +126,7 @@
       if (page === 'menu')      loadMenu();
       if (page === 'meja')      loadMeja();
       if (page === 'antrean')   loadAntrean();
+      if (page === 'users')     loadUsers();
     }
 
     function refreshCurrent() { showPage(currentPage); }
@@ -124,11 +135,16 @@
        FETCH WRAPPER
     ═══════════════════════════════════════════ */
     async function apiFetch(url, options = {}) {
-      options.headers = { 'ngrok-skip-browser-warning': 'true', ...options.headers };
+      const token = localStorage.getItem('token');
+      options.headers = {
+        'ngrok-skip-browser-warning': 'true',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...options.headers,
+      };
       const res = await fetch(url, options);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const json = await res.json();
-      if (!json.success) throw new Error(json.message || 'Server error');
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(json.error || json.message || 'HTTP ' + res.status);
+      if (!json.success) throw new Error(json.error || json.message || 'Server error');
       return json.data;
     }
 
@@ -925,3 +941,81 @@
       document.getElementById('page-sub').textContent = todayLabel();
       loadDashboard();
     });
+
+    /* ═══════════════════════════════════════════
+       USER MANAGEMENT
+    ═══════════════════════════════════════════ */
+    async function loadUsers() {
+      const tbody = document.getElementById('usersTbody');
+      tbody.innerHTML = '<tr><td colspan="6" class="empty">Memuat…</td></tr>';
+      try {
+        const data = await apiFetch(`${API_BASE}/users`);
+        const users = data.data?.users || [];
+        if (!users.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty">Belum ada user</td></tr>';
+          return;
+        }
+        tbody.innerHTML = users.map((u, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${u.name || '—'}</td>
+            <td>${u.username}</td>
+            <td><span style="padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:${u.role==='admin'?'#ebf8ff':'#f0fff4'};color:${u.role==='admin'?'#2b6cb0':'#276749'}">${u.role}</span></td>
+            <td>${fmtDate(u.created_at)}</td>
+            <td><button onclick="deleteUser(${u.id},'${u.username}')" style="padding:4px 10px;border:1px solid #fed7d7;border-radius:6px;background:#fff5f5;color:#c53030;cursor:pointer;font-size:12px;"><i class="fa-solid fa-trash"></i></button></td>
+          </tr>`).join('');
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="6" class="empty">Gagal memuat data</td></tr>';
+      }
+    }
+
+    function openModalUser() {
+      document.getElementById('uName').value = '';
+      document.getElementById('uUsername').value = '';
+      document.getElementById('uPassword').value = '';
+      document.getElementById('modalUserErr').style.display = 'none';
+      const m = document.getElementById('modalUser');
+      m.style.display = 'flex';
+    }
+
+    function closeModalUser() {
+      document.getElementById('modalUser').style.display = 'none';
+    }
+
+    async function submitUser() {
+      const name     = document.getElementById('uName').value.trim();
+      const username = document.getElementById('uUsername').value.trim();
+      const password = document.getElementById('uPassword').value;
+      const errEl    = document.getElementById('modalUserErr');
+
+      if (!username || !password) {
+        errEl.textContent = 'Username dan password wajib diisi';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      try {
+        await apiFetch(`${API_BASE}/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, username, password, role: 'kasir' }),
+        });
+        closeModalUser();
+        showToast('User kasir berhasil ditambahkan!');
+        loadUsers();
+      } catch (e) {
+        errEl.textContent = e.message || 'Gagal menyimpan user';
+        errEl.style.display = 'block';
+      }
+    }
+
+    async function deleteUser(id, username) {
+      if (!confirm(`Hapus user "${username}"?`)) return;
+      try {
+        await apiFetch(`${API_BASE}/users/${id}`, { method: 'DELETE' });
+        showToast('User berhasil dihapus');
+        loadUsers();
+      } catch (e) {
+        showToast(e.message || 'Gagal menghapus user', true);
+      }
+    }
