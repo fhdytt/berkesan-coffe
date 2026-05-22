@@ -401,10 +401,7 @@
     function buildMenuKatTabs() {
       const wrap = document.getElementById('menuKatTabs');
       wrap.innerHTML = `<button class="in-tab ${_menuKatFilter==='all'?'active':''}" onclick="filterMenuKat('all',this)" data-kat="all">Semua</button>`;
-            if (!_kategoriData.length) {
-        sel.innerHTML += '<option value="" disabled>Belum ada kategori. Refresh atau cek tabel kategori.</option>';
-        return;
-      }
+      if (!_kategoriData.length) return;
       _kategoriData.forEach(k => {
         const btn = document.createElement('button');
         btn.className = 'in-tab' + (_menuKatFilter == k.id ? ' active' : '');
@@ -956,7 +953,7 @@
       tbody.innerHTML = '<tr><td colspan="6" class="empty">Memuat…</td></tr>';
       try {
         const data = await apiFetch(`${API_BASE}/users`);
-        const users = data.data?.users || [];
+        const users = data?.users || [];
         if (!users.length) {
           tbody.innerHTML = '<tr><td colspan="6" class="empty">Belum ada user</td></tr>';
           return;
