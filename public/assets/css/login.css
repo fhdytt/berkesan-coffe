@@ -12,6 +12,13 @@
 
     html, body { height: 100%; }
 
+    .captcha-question {
+      margin-top: 6px;
+      font-size: .85rem;
+      color: var(--cream-dim);
+    }
+    .captcha-question strong { color: var(--cream); font-weight: 700; }
+
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
       background: var(--green-dark);

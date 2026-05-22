@@ -4,7 +4,7 @@ function _genCaptcha() {
   const a = Math.floor(Math.random() * 10) + 1;
   const b = Math.floor(Math.random() * 10) + 1;
   _captchaAnswer = a + b;
-  document.getElementById('captchaQuestion').textContent = `${a} + ${b} = ?`;
+  document.getElementById('captchaQuestion').textContent = `${a} + ${b}`;
   document.getElementById('captchaInput').value = '';
 }
 
