@@ -1,32 +1,112 @@
-# Berkesan Frontend — Deploy ke Vercel
+# Berkesan Frontend
 
-## Sebelum Deploy
+Antarmuka web untuk aplikasi kasir & pemesanan **Kopi Berkesan**. Dibangun dengan HTML, CSS, dan JavaScript murni (vanilla) — tanpa framework. Di-deploy di **Vercel**.
 
-Edit file `public/js/api.config.js`, ganti URL dengan URL Railway backend kamu:
+🌐 **Live**: [berkesan-coffe.vercel.app](https://berkesan-coffe.vercel.app)
 
-```js
-const BACKEND_URL = "https://berkesan-backend.up.railway.app"; // ganti ini
+## Tech Stack
+
+- **HTML / CSS / JavaScript** (vanilla, tanpa framework)
+- **Hosting**: Vercel (static site)
+- **API**: Terhubung ke backend via ngrok
+
+## Struktur Folder
+
+```
+berkesan-frontend/
+├── index.html              # Halaman utama (landing page)
+├── vercel.json             # Konfigurasi routing Vercel
+├── public/
+│   ├── pages/
+│   │   ├── order.html      # Halaman pemesanan pelanggan
+│   │   ├── about.html      # Halaman tentang kami
+│   │   └── login.html      # Halaman login
+│   ├── js/
+│   │   ├── api.config.js   # ⚠️ Konfigurasi URL backend
+│   │   ├── index.js        # Script landing page
+│   │   ├── order.js        # Script halaman order
+│   │   ├── login.js        # Script login
+│   │   ├── about.js        # Script halaman about
+│   │   ├── kasir.js        # Script dashboard kasir
+│   │   └── dashboardAdmin.js # Script dashboard admin
+│   └── assets/
+│       ├── img/            # Gambar & aset visual
+│       └── css/            # Stylesheet
+├── admin/
+│   └── index.html          # Dashboard admin
+└── kasir/
+    └── index.html          # Dashboard kasir
 ```
 
-## Langkah Deploy
+## Halaman & Akses
 
-1. Push folder ini ke GitHub sebagai repo baru (misal: `berkesan-frontend`)
-2. Buka [vercel.com](https://vercel.com) → Login dengan GitHub
-3. Klik **Add New Project** → pilih repo `berkesan-frontend`
-4. Biarkan semua setting default → klik **Deploy**
-5. Vercel akan memberikan URL publik (contoh: `https://berkesan.vercel.app`)
+| URL | File | Akses |
+|-----|------|-------|
+| `/` | `index.html` | Publik — landing page |
+| `/order` | `public/pages/order.html` | Publik — pelanggan pesan |
+| `/about` | `public/pages/about.html` | Publik |
+| `/login` | `public/pages/login.html` | Publik |
+| `/admin` | `admin/index.html` | Login sebagai `admin` |
+| `/kasir` | `kasir/index.html` | Login sebagai `kasir` |
 
-## Setelah Deploy
+## Konfigurasi Backend URL
 
-Kembali ke Railway backend, update variable `FRONTEND_URL` dengan URL Vercel kamu agar CORS berjalan dengan benar.
+File penting: **`public/js/api.config.js`**
 
-## Halaman yang Tersedia
+```js
+const BACKEND_URL = "https://xxxx.ngrok-free.app"; // URL ngrok backend
+```
 
-| URL | Halaman |
-|-----|---------|
-| `/` | Halaman utama |
-| `/login` | Login admin/kasir |
-| `/order` | Halaman order pelanggan |
-| `/about` | Tentang |
-| `/admin` | Dashboard admin |
-| `/kasir` | Panel kasir |
+> ⚠️ **Setiap kali ngrok dijalankan ulang**, URL berubah. Wajib update file ini dan push ke GitHub agar Vercel otomatis redeploy.
+
+## Setup Lokal
+
+Tidak perlu build step. Cukup buka file HTML langsung di browser, atau gunakan live server:
+
+```bash
+# Dengan VS Code Live Server extension, atau:
+npx serve .
+```
+
+Pastikan `api.config.js` sudah mengarah ke URL backend yang aktif.
+
+## Deploy ke Vercel
+
+### Pertama kali
+
+1. Push repo ke GitHub
+2. Buka [vercel.com](https://vercel.com) → Import project dari GitHub
+3. Framework preset: **Other** (static site)
+4. Root directory: `/` (root folder)
+5. Klik Deploy
+
+### Update setelah perubahan
+
+```bash
+git add .
+git commit -m "pesan commit"
+git push
+```
+
+Vercel otomatis redeploy setiap ada push ke branch utama.
+
+### Update URL ngrok
+
+```bash
+# Edit api.config.js dengan URL ngrok terbaru
+# Lalu:
+git add public/js/api.config.js
+git commit -m "update ngrok url"
+git push
+```
+
+## Alur Penggunaan
+
+```
+Pelanggan → /order → pilih menu → submit order
+                                        ↓
+                              Backend (ngrok) → MySQL
+                                        ↓
+Kasir → /kasir → lihat order masuk → proses pembayaran
+Admin → /admin → dashboard penjualan, kelola menu
+```
