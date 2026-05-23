@@ -1,11 +1,10 @@
 /* ── Auth Guard ── */
 (function () {
+  document.body.style.display = '';
   const token = localStorage.getItem('token');
   const user  = JSON.parse(localStorage.getItem('user') || 'null');
   if (!token || !user || !['admin', 'dev'].includes(user.role)) {
     window.location.replace('/login');
-  } else {
-    document.body.style.display = '';
   }
 })();
 
@@ -138,12 +137,16 @@
     ═══════════════════════════════════════════ */
     async function apiFetch(url, options = {}) {
       const token = localStorage.getItem('token');
-      options.headers = {
-        'ngrok-skip-browser-warning': 'true',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-        ...options.headers,
-      };
-      const res = await fetch(url, options);
+      const { headers: extraHeaders, ...restOpts } = options;
+      const res = await fetch(url, {
+        ...restOpts,
+        headers: {
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+          ...extraHeaders,
+        },
+      });
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json.error || json.message || 'HTTP ' + res.status);
       if (!json.success) throw new Error(json.error || json.message || 'Server error');

@@ -1,11 +1,10 @@
 /* ── Auth Guard ── */
 (function () {
+  document.body.style.display = '';
   const token = localStorage.getItem('token');
   const user  = JSON.parse(localStorage.getItem('user') || 'null');
   if (!token || !user || !['kasir', 'admin', 'dev'].includes(user.role)) {
     window.location.replace('/login');
-  } else {
-    document.body.style.display = '';
   }
 })();
 
@@ -183,7 +182,17 @@ function refreshCurrent() { showSection(_currentSection); }
    FETCH WRAPPER
 ═══════════════════════════════ */
 async function apiFetch(url, opts = {}) {
-  const res = await fetch(url, { headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' }, ...opts });
+  const token = localStorage.getItem('token');
+  const { headers: extraHeaders, ...restOpts } = opts;
+  const res = await fetch(url, {
+    ...restOpts,
+    headers: {
+      'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': 'true',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      ...extraHeaders,
+    },
+  });
   if (!res.ok) throw new Error('HTTP ' + res.status);
   const j = await res.json();
   if (!j.success) throw new Error(j.message || 'Server error');
