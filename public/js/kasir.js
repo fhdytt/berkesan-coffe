@@ -1,6 +1,6 @@
 /* ── Auth Guard ── */
 (function () {
-  document.body.style.display = '';
+  document.body.style.display = 'block';
   const token = localStorage.getItem('token');
   const user  = JSON.parse(localStorage.getItem('user') || 'null');
   if (!token || !user || !['kasir', 'admin', 'dev'].includes(user.role)) {
