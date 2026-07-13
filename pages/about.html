@@ -2,9 +2,9 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>Berkesan Coffee | Tentang Kami</title>
-    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/about.css" />
     <link rel="icon" href="/assets/img/berkesan_logo.png">
@@ -423,46 +423,110 @@
       }, { threshold: 0.15 });
       revealEls.forEach(el => io.observe(el));
 
-      // ===== Parallax blob mengikuti mouse =====
-      const blobs = document.querySelectorAll('.parallax-blob');
-      document.addEventListener('mousemove', (e) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 40;
-        const y = (e.clientY / window.innerHeight - 0.5) * 40;
-        blobs.forEach((blob, i) => {
-          const factor = i % 2 === 0 ? 1 : -1;
-          blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
-        });
-      });
+      // =========================================================
+      // DETEKSI TOUCH DEVICE
+      // Menambahkan class "is-touch" ke <html> agar animasi mobile
+      // khusus (ripple, tap-bounce, float halus) aktif, dan supaya
+      // efek berbasis mouse (parallax blob, tilt 3D) tidak dipaksakan
+      // berjalan di perangkat sentuh.
+      // =========================================================
+      const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+      if (isTouchDevice) {
+        document.documentElement.classList.add('is-touch');
+      }
 
-      // ===== Tilt 3D di card =====
-      document.querySelectorAll('.tilt-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = ((y - centerY) / centerY) * -6;
-          const rotateY = ((x - centerX) / centerX) * 6;
-          card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+      if (!isTouchDevice) {
+        // ===== Parallax blob mengikuti mouse (desktop only) =====
+        const blobs = document.querySelectorAll('.parallax-blob');
+        document.addEventListener('mousemove', (e) => {
+          const x = (e.clientX / window.innerWidth - 0.5) * 40;
+          const y = (e.clientY / window.innerHeight - 0.5) * 40;
+          blobs.forEach((blob, i) => {
+            const factor = i % 2 === 0 ? 1 : -1;
+            blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+          });
         });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
-        });
-      });
 
-      // ===== Magnetic button =====
-      document.querySelectorAll('.magnetic-btn').forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-          const rect = btn.getBoundingClientRect();
-          const x = e.clientX - rect.left - rect.width / 2;
-          const y = e.clientY - rect.top - rect.height / 2;
-          btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+        // ===== Tilt 3D di card (desktop only) =====
+        document.querySelectorAll('.tilt-card').forEach(card => {
+          card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -6;
+            const rotateY = ((x - centerX) / centerX) * 6;
+            card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+          });
+          card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+          });
         });
-        btn.addEventListener('mouseleave', () => {
-          btn.style.transform = 'translate(0, 0)';
+
+        // ===== Magnetic button (desktop only) =====
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+          btn.addEventListener('mousemove', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+          });
+          btn.addEventListener('mouseleave', () => {
+            btn.style.transform = 'translate(0, 0)';
+          });
         });
-      });
+      } else {
+        // =========================================================
+        // ANIMASI KHUSUS MOBILE / TOUCH
+        // =========================================================
+
+        // --- Tap ripple pada tombol (pengganti efek magnetic) ---
+        document.querySelectorAll('.magnetic-btn').forEach(btn => {
+          btn.addEventListener('touchstart', (e) => {
+            const rect = btn.getBoundingClientRect();
+            const touch = e.touches[0];
+            const ripple = document.createElement('span');
+            const size = Math.max(rect.width, rect.height);
+            ripple.className = 'tap-ripple';
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (touch.clientX - rect.left - size / 2) + 'px';
+            ripple.style.top = (touch.clientY - rect.top - size / 2) + 'px';
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+          }, { passive: true });
+        });
+
+        // --- Tap bounce pada card (pengganti tilt 3D) ---
+        document.querySelectorAll('.tilt-card').forEach(card => {
+          card.addEventListener('touchstart', () => {
+            card.classList.remove('tap-active');
+            // force reflow supaya animasi bisa diulang
+            void card.offsetWidth;
+            card.classList.add('tap-active');
+          }, { passive: true });
+        });
+
+        // --- Parallax blob mengikuti kemiringan perangkat (gyroscope), jika tersedia ---
+        const blobsTouch = document.querySelectorAll('.parallax-blob');
+        if (window.DeviceOrientationEvent && blobsTouch.length) {
+          let orientationEnabled = false;
+          const handleOrientation = (e) => {
+            const x = (e.gamma || 0) * 1.2; // kiri-kanan
+            const y = (e.beta || 0) * 0.6;  // depan-belakang
+            blobsTouch.forEach((blob, i) => {
+              const factor = i % 2 === 0 ? 1 : -1;
+              blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+            });
+          };
+          // iOS 13+ butuh izin eksplisit; kita hanya pasang listener
+          // secara pasif tanpa memaksa dialog izin muncul otomatis.
+          if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
+            window.addEventListener('deviceorientation', handleOrientation);
+            orientationEnabled = true;
+          }
+        }
+      }
     </script>
   </body>
 </html>
