@@ -3,16 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="api-url" content="RAILWAY_BACKEND_URL">
   <title>Berkesan — Kasir</title>
-  <link rel="icon" type="image/png" href="/assets/img/berkesan_logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/tailwind.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <link rel="stylesheet" href="/assets/css/kasir.css" />
   <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js"></script>
-  <style>body{display:none}</style>
-  <noscript><style>body{display:block}</style></noscript>
-  <script>window.onerror=function(){document.body.style.display='block';return false;};</script>
 </head>
 
 <body>
@@ -31,7 +27,7 @@
   <!-- ════════════ SIDEBAR ════════════ -->
   <aside class="sidebar">
     <div class="sb-brand">
-      <div class="sb-ico"><img src="/assets/img/berkesan_logo.png" alt="logo" style="width: 32px; height: 32px; object-fit: contain; border-radius: 8px;"></div>
+      <div class="sb-ico"><img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 48px; height: 48px; object-fit: contain;"></div>
       <div>
         <div class="sb-title">Berkesan</div>
         <div class="sb-sub">Kasir Dashboard</div>
@@ -277,12 +273,13 @@
                   <th>Total</th>
                   <th>Bayar</th>
                   <th>Status</th>
+                  <th>Status Bayar</th>
                   <th>Waktu</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody id="historyTbody">
-                <tr><td colspan="8" class="empty" style="padding:32px 0;display:table-cell;text-align:center;color:var(--muted);">Memuat…</td></tr>
+                <tr><td colspan="9" class="empty" style="padding:32px 0;display:table-cell;text-align:center;color:var(--muted);">Memuat…</td></tr>
               </tbody>
             </table>
           </div>
@@ -333,8 +330,8 @@
 <!-- ════════ RECEIPT PRINT ════════ -->
 <div id="receiptPrint"></div>
 
-<script src="/js/api.config.js"></script>
-<script src="/js/kasir.js"></script>
+<script src="/assets/js/api.config.js"></script>
+<script src="/assets/js/kasir.js"></script>
 <script>
   function toggleSidebar() {
     document.querySelector('.sidebar').classList.toggle('open');

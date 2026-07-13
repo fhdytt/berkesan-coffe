@@ -52,7 +52,6 @@
     .sb-ico {
       width: 38px; height: 38px;
       border-radius: 10px;
-      background: var(--brand-pale); color: var(--brand);
       display: flex; align-items: center; justify-content: center;
       font-size: 16px; flex-shrink: 0;
     }
@@ -569,3 +568,45 @@
       .stat-row { grid-template-columns: repeat(2, 1fr); }
       .topbar-right { gap: 4px; }
     }
+
+    /* Memastikan icon di tengah */
+    .sb-ico, .btn i, .fa-solid, .fa-regular {
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Ikon di sidebar */
+    .sb-item i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Ikon di tombol */
+    .btn i {
+      margin-right: 6px;
+    }
+
+    /* Ikon di card */
+    .order-ico {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+    }
+
+    /* Nomor antrian permanen */
+  .queue-num-permanent {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--brand);
+    width: 55px;
+    flex-shrink: 0;
+    background: var(--brand-pale);
+    padding: 4px 8px;
+    border-radius: 8px;
+    text-align: center;
+  }

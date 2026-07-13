@@ -3,33 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="api-url" content="RAILWAY_BACKEND_URL">
     <title>Berkesan Coffee | Menu</title>
-    <link rel="icon" type="image/png" href="/assets/img/berkesan_logo.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <style>
-        :root {
-            --cream:    #f7facc;
-            --lime:     #bfc56b;
-            --forest:   #63773c;
-            --brown:    #836527;
-            --dark:     #050503;
-        }
-
-        body { font-family: 'Inter', sans-serif; }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-        }
-        .animate-float { animation: float 5s ease-in-out infinite; }
-        
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 119, 60, 0.4); border-radius: 10px; }
-    </style>
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
+    <link rel="icon" href="/assets/img/berkesan_logo.png">
 </head>
 <body style="background-color: var(--dark);" class="min-h-screen flex items-center justify-center p-0 md:p-6">
 
@@ -52,7 +31,7 @@
                 <div class="animate-float">
                     <div class="inline-block p-4 rounded-2xl mb-4 shadow-xl"
                          style="background-color: var(--forest);">
-                        <img src="/assets/img/berkesan_logo.png" alt="logo" class="w-12 h-12 object-contain">
+                        <img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 50px; height: 50px; object-fit: contain;">
                     </div>
                     <h1 class="text-4xl md:text-6xl font-black leading-none mb-2"
                         style="color: var(--cream);">

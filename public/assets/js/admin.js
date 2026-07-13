@@ -1,31 +1,36 @@
+// admin.js
 /* ── Auth Guard ── */
 (function () {
-  document.body.style.display = 'block';
   const token = localStorage.getItem('token');
   const user  = JSON.parse(localStorage.getItem('user') || 'null');
   if (!token || !user || !['admin', 'dev'].includes(user.role)) {
     window.location.replace('/login');
+  } else {
+    document.body.style.display = '';
   }
 })();
 
-    window.addEventListener("load", () => {
-        if (!window.QRCode) {
-          const script = document.createElement("script");
-          script.src =
-            "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
-          document.head.appendChild(script);
-        }
-      });
-  
-  /* ═══════════════════════════════════════════
-       CONFIG
-    ═══════════════════════════════════════════ */
-    const API_BASE = `${BACKEND_URL}/api/dashboard`;
+// API_URL dibaca dari api.config.js yang di-load sebelum file ini
+// - Production : dari <meta name="api-url"> di admin/index.html
+// - Lokal dev  : otomatis fallback ke http://localhost:3000
+const API_BASE = `${window.API_URL}/api/dashboard`;
+
+console.log("Dashboard Admin loaded, API_BASE:", API_BASE);
+
+// HANYA SATU window.addEventListener
+window.addEventListener("load", () => {
+  if (!window.QRCode) {
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js";
+    document.head.appendChild(script);
+  }
+});
+
+
+    // CONFIG
     const MONTH_NAMES = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 
-    /* ═══════════════════════════════════════════
-       UTILITY
-    ═══════════════════════════════════════════ */
+    // UTILITY
     function fmtRp(val, short = true) {
       const n = Number(val) || 0;
       if (short) {
@@ -55,7 +60,9 @@
       setTimeout(() => t.className = 'toast', 2800);
     }
     function setLoading(on) {
-      document.getElementById('loadingOverlay').style.display = on ? 'flex' : 'none';
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.style.display = on ? 'flex' : 'none';
+      overlay.style.pointerEvents = on ? 'all' : 'none';
     }
     function statusBadgeHtml(st) {
       const map = { pending:'st-pending', diproses:'st-diproses', selesai:'st-selesai', dibatalkan:'st-dibatalkan' };
@@ -86,30 +93,26 @@
       return 'fa-utensils';
     }
 
-    /* ═══════════════════════════════════════════
-       CHART INSTANCES
-    ═══════════════════════════════════════════ */
+
+    // CHART INSTANCES
     const _charts = {};
     function destroyChart(id) { if (_charts[id]) { _charts[id].destroy(); delete _charts[id]; } }
 
-    /* ═══════════════════════════════════════════
-       CURRENT PAGE
-    ═══════════════════════════════════════════ */
+    // CURRENT PAGE
     let currentPage = 'dashboard';
 
     function showPage(page) {
-      ['dashboard','rekap','stok','laporan','menu','meja','antrean','users'].forEach(p => {
+      ['dashboard','rekap','laporan','menu','meja','antrean','users'].forEach(p => {
         document.getElementById('page-'+p).style.display = p === page ? 'flex' : 'none';
       });
       document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
-      const idx = { dashboard:0, rekap:1, stok:2, laporan:3, menu:4, meja:5, antrean:6, users:7 };
+      const idx = { dashboard:0, rekap:1, laporan:2, menu:3, meja:4, antrean:5, users:6 };
       const btns = document.querySelectorAll('.sb-item');
       if (btns[idx[page]]) btns[idx[page]].classList.add('active');
 
       const titles = {
         dashboard: ['Dashboard Hari Ini', todayLabel()],
         rekap:     ['Rekap Bulanan', 'Statistik penjualan per bulan'],
-        stok:      ['Stok Barang', 'Kelola dan pantau inventaris'],
         laporan:   ['Laporan Transaksi', 'Riwayat semua transaksi'],
         menu:      ['Kelola Menu', 'Tambah, edit, dan hapus item menu'],
         meja:      ['Meja & QR Code', 'Generate dan kelola QR Code per meja'],
@@ -122,7 +125,6 @@
 
       if (page === 'dashboard') loadDashboard();
       if (page === 'rekap')     { initRekapFilters(); loadRekap(); }
-      if (page === 'stok')      loadStok();
       if (page === 'laporan')   { initLaporanFilters(); loadLaporan(); }
       if (page === 'menu')      loadMenu();
       if (page === 'meja')      loadMeja();
@@ -132,30 +134,24 @@
 
     function refreshCurrent() { showPage(currentPage); }
 
-    /* ═══════════════════════════════════════════
-       FETCH WRAPPER
-    ═══════════════════════════════════════════ */
+    // FETCH WRAPPER
     async function apiFetch(url, options = {}) {
       const token = localStorage.getItem('token');
-      const { headers: extraHeaders, ...restOpts } = options;
-      const res = await fetch(url, {
-        ...restOpts,
-        headers: {
-          'Content-Type': 'application/json',
-          'ngrok-skip-browser-warning': 'true',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-          ...extraHeaders,
-        },
-      });
+      options.headers = {
+        'ngrok-skip-browser-warning': 'true',
+        'Cache-Control': 'no-cache',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+        ...options.headers,
+      };
+      options.cache = 'no-store';   // <-- tambahan ini kunci fix-nya
+      const res = await fetch(url, options);
       const json = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(json.error || json.message || 'HTTP ' + res.status);
       if (!json.success) throw new Error(json.error || json.message || 'Server error');
       return json.data;
     }
 
-    /* ═══════════════════════════════════════════
-       PAGE: DASHBOARD
-    ═══════════════════════════════════════════ */
+    // PAGE: DASHBOARD
     async function loadDashboard() {
       setLoading(true);
       document.getElementById('dashErr').style.display = 'none';
@@ -170,19 +166,31 @@
     }
 
     function renderDashboard(data) {
-      document.getElementById('kpi-income').textContent  = fmtRp(data.incomeToday);
-      document.getElementById('kpi-orders').textContent  = data.ordersToday;
-      document.getElementById('kpi-sold').textContent    = data.productsSold + ' pcs';
-      document.getElementById('kpi-lowstock').textContent = (data.lowStock || []).length;
+      const today = data.today || {};
+      const bestProducts = data.bestProducts || [];
+      const recentOrders = data.recentOrders || [];
+      const salesChart = data.salesChart || [];
+      
+      // Update KPI cards
+      document.getElementById('kpi-income').textContent = fmtRp(today.incomeToday || 0);
+      document.getElementById('kpi-orders').textContent = today.ordersToday || 0;
+      document.getElementById('kpi-sold').textContent = (today.productsSold || 0) + ' pcs';
+      
+      // Update subtitle
       document.getElementById('kpi-orders-sub').innerHTML = '<i class="fa-solid fa-circle-info"></i> order masuk hari ini';
       document.getElementById('kpi-income-sub').innerHTML = '<i class="fa-solid fa-arrow-trend-up"></i> pendapatan hari ini';
-      const lowLen = (data.lowStock || []).length;
-      document.getElementById('notifDot').style.display = lowLen > 0 ? 'block' : 'none';
-      renderSalesChart(data.salesChart || []);
-      renderRecentOrders(data.recentOrders || []);
-      renderBestProducts(data.bestProducts || []);
-      renderLowStock(data.lowStock || []);
-      const queue = (data.recentOrders || []).filter(o => o.status === 'pending' || o.status === 'diproses');
+      
+      // Render chart
+      renderSalesChart(salesChart);
+      
+      // Render recent orders
+      renderRecentOrders(recentOrders);
+      
+      // Render best products
+      renderBestProducts(bestProducts);
+      
+      // Render queue (pending/diproses orders)
+      const queue = recentOrders.filter(o => o.status === 'pending' || o.status === 'diproses');
       renderDashQueue(queue);
     }
 
@@ -194,39 +202,50 @@
       _charts['salesChart'] = new Chart(ctx, {
         type: 'line',
         data: { labels, datasets: [{ label: 'Pendapatan', data: vals, borderColor: '#4a6741', backgroundColor: 'rgba(74,103,65,0.12)', fill: true, tension: 0.4, pointBackgroundColor: '#4a6741', pointRadius: 4, pointHoverRadius: 6 }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmtRp(c.raw, false) } } }, scales: { y: { grid: { color: '#e8ede4' }, ticks: { callback: v => fmtRp(v), font: { size: 10 } }, beginAtZero: true }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmtRp(c.raw, false) } } }, scales: { y: { grid: { color: '#e8ede4' }, ticks: { callback: v => fmtRp(Math.round(v)), font: { size: 10 }, precision:0 }, beginAtZero: true }, x: { grid: { display: false }, ticks: { font: { size: 10 } } } } }
       });
     }
 
     function renderRecentOrders(orders) {
       const el = document.getElementById('recentOrdersList');
-      if (!orders.length) { el.innerHTML = '<div class="empty"><i class="fa-solid fa-receipt"></i>Belum ada pesanan</div>'; return; }
+      if (!orders.length) { 
+        el.innerHTML = '<div class="empty"><i class="fa-solid fa-receipt"></i>Belum ada pesanan</div>'; 
+        return; 
+      }
       el.innerHTML = orders.map((o, i) => `
         <div class="order-item">
           <div class="order-ico ${orderIcoClass(i)}"><i class="fa-solid ${orderIcoIcon(o.customer_name)}"></i></div>
-          <div style="flex:1;min-width:0;"><div class="order-name">${o.order_code}</div><div class="order-meta">${o.customer_name||'—'} • ${payIcon(o.payment_method)}</div></div>
-          ${statusBadgeHtml(o.status)}
-          <div class="order-price">${fmtRp(o.total_price)}</div>
-        </div>`).join('');
+          <div class="order-content">
+            <div class="order-top">
+              <span class="order-name">${o.order_code}</span>
+              <span class="order-price">${fmtRp(o.total_price)}</span>
+            </div>
+            <div class="order-bottom">
+              <span class="order-meta">${o.customer_name || '—'} • ${payIcon(o.payment_method)}</span>
+              ${statusBadgeHtml(o.status)}
+            </div>
+          </div>
+        </div>
+      `).join('');
     }
 
     function renderBestProducts(prods) {
       const tbody = document.getElementById('bestProductsTbody');
-      if (!prods.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">Belum ada data produk</td></tr>'; return; }
+      if (!prods.length) { 
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">Belum ada data produk</td></tr>'; 
+        return; 
+      }
       const badges = ['b-best','b-trend','b-pop','b-pop','b-slow'];
       const labels = ['Best Seller','Trending','Popular','Popular','Slow Move'];
-      tbody.innerHTML = prods.map((p, i) => `<tr><td style="color:var(--muted);font-weight:700;">${i+1}</td><td class="prod-name">${p.menu_name}</td><td>${p.sold} pcs</td><td>${fmtRp(p.revenue)}</td><td><span class="badge ${badges[i]||'b-slow'}">${labels[i]||'—'}</span></td></tr>`).join('');
-    }
-
-    function renderLowStock(items) {
-      const el = document.getElementById('lowStockList');
-      document.getElementById('lowStockBadge').textContent = items.length;
-      if (!items.length) { el.innerHTML = '<div class="empty"><i class="fa-solid fa-check-circle" style="color:var(--brand);"></i>Semua stok aman</div>'; return; }
-      el.innerHTML = items.map(item => {
-        const qty = Number(item.stock);
-        const cls = qty <= 3 ? 'crit' : qty <= 7 ? 'warn' : 'low';
-        return `<div class="stock-item ${cls}"><div><div class="stock-name">${item.name}</div><div class="stock-min">Stok tersisa</div></div><div class="stock-qty ${cls}">${qty}</div></div>`;
-      }).join('');
+      tbody.innerHTML = prods.map((p, i) => `
+        <tr>
+          <td style="color:var(--muted);font-weight:700;">${i+1}</td>
+          <td class="prod-name">${p.menu_name}</td>
+          <td>${p.sold} pcs</td>
+          <td>${fmtRp(p.revenue)}</td>
+          <td><span class="badge ${badges[i] || 'b-slow'}">${labels[i] || '—'}</span></td>
+        </tr>
+      `).join('');
     }
 
     function renderDashQueue(orders) {
@@ -241,109 +260,156 @@
         </div>`).join('');
     }
 
-    /* ═══════════════════════════════════════════
-       PAGE: REKAP BULANAN
-    ═══════════════════════════════════════════ */
+    // PAGE: REKAP BULANAN
     function initRekapFilters() {
       const now = new Date();
       const mSel = document.getElementById('rekapMonth');
       const ySel = document.getElementById('rekapYear');
-      if (mSel.options.length) return;
-      MONTH_NAMES.forEach((m, i) => { const o = document.createElement('option'); o.value = String(i+1).padStart(2,'0'); o.textContent = m; if (i === now.getMonth()) o.selected = true; mSel.appendChild(o); });
-      for (let y = now.getFullYear(); y >= now.getFullYear()-3; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; if (y === now.getFullYear()) o.selected = true; ySel.appendChild(o); }
+      
+      // Kosongkan dulu
+      mSel.innerHTML = '';
+      ySel.innerHTML = '';
+      
+      // Isi bulan
+      const months = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+      months.forEach((m, i) => { 
+        const o = document.createElement('option'); 
+        o.value = String(i+1).padStart(2,'0'); 
+        o.textContent = m; 
+        if (i === now.getMonth()) o.selected = true; 
+        mSel.appendChild(o); 
+      });
+      
+      // Isi tahun (4 tahun terakhir)
+      for (let y = now.getFullYear(); y >= now.getFullYear()-3; y--) { 
+        const o = document.createElement('option'); 
+        o.value = y; 
+        o.textContent = y; 
+        if (y === now.getFullYear()) o.selected = true; 
+        ySel.appendChild(o); 
+      }
     }
 
     async function loadRekap() {
       setLoading(true);
       const month = document.getElementById('rekapMonth').value;
-      const year  = document.getElementById('rekapYear').value;
-      try { const data = await apiFetch(`${API_BASE}/rekap?month=${month}&year=${year}`); renderRekap(data); }
-      catch(e) { showToast('Gagal memuat rekap: ' + e.message, true); }
-      finally { setLoading(false); }
+      const year = document.getElementById('rekapYear').value;
+      try { 
+        const data = await apiFetch(`${API_BASE}/rekap?month=${month}&year=${year}`); 
+        console.log("Rekap data:", data);
+        renderRekap(data); 
+      } catch(e) { 
+        showToast('Gagal memuat rekap: ' + e.message, true); 
+      } finally { 
+        setLoading(false); 
+      }
     }
 
     function renderRekap(data) {
-      document.getElementById('rek-income').textContent = fmtRp(data.totalIncome);
-      document.getElementById('rek-orders').textContent = data.totalOrders;
-      document.getElementById('rek-sold').textContent   = data.totalSold;
-      const avg = data.totalOrders > 0 ? Math.round(data.totalIncome / data.totalOrders) : 0;
-      document.getElementById('rek-avg').textContent    = fmtRp(avg);
-      if (data.prevIncome != null) {
-        const diff = data.totalIncome - data.prevIncome;
-        const pct  = data.prevIncome > 0 ? ((diff / data.prevIncome) * 100).toFixed(1) : 0;
-        const el   = document.getElementById('rek-income-ch');
-        el.textContent = (diff >= 0 ? '↑ +' : '↓ ') + pct + '% vs bulan lalu';
-        el.style.color = diff >= 0 ? '#2a7a3a' : 'var(--red)';
+      console.log("Rendering rekap with data:", data);
+      
+      // Ambil dari summary (bukan langsung)
+      const summary = data.summary || {};
+      const comparison = data.comparison || {};
+      const daily = data.daily || [];
+      const bestProducts = data.bestProducts || [];
+      const paymentSummary = data.paymentSummary || [];
+      
+      // Update KPI
+      document.getElementById('rek-income').textContent = fmtRp(summary.totalIncome || 0);
+      document.getElementById('rek-orders').textContent = summary.totalOrders || 0;
+      document.getElementById('rek-sold').textContent = summary.totalSold || 0;
+      
+      const avg = summary.totalOrders > 0 ? Math.round(summary.totalIncome / summary.totalOrders) : 0;
+      document.getElementById('rek-avg').textContent = fmtRp(avg);
+      
+      // Comparison (vs bulan lalu)
+      if (comparison.prevIncome !== undefined) {
+        const diff = (summary.totalIncome || 0) - (comparison.prevIncome || 0);
+        const pct = comparison.prevIncome > 0 ? ((diff / comparison.prevIncome) * 100).toFixed(1) : 0;
+        const el = document.getElementById('rek-income-ch');
+        if (el) {
+          el.textContent = (diff >= 0 ? '↑ +' : '↓ ') + pct + '% vs bulan lalu';
+          el.style.color = diff >= 0 ? '#2a7a3a' : 'var(--red)';
+        }
+        
+        const diffO = (summary.totalOrders || 0) - (comparison.prevOrders || 0);
         const elO = document.getElementById('rek-orders-ch');
-        const diffO = data.totalOrders - (data.prevOrders||0);
-        elO.textContent = (diffO >= 0 ? '↑ +' : '↓ ') + diffO + ' order vs bulan lalu';
-        elO.style.color = diffO >= 0 ? '#2a7a3a' : 'var(--red)';
+        if (elO) {
+          elO.textContent = (diffO >= 0 ? '↑ +' : '↓ ') + diffO + ' order vs bulan lalu';
+          elO.style.color = diffO >= 0 ? '#2a7a3a' : 'var(--red)';
+        }
       }
+      
+      // Chart harian
       destroyChart('rekapChart');
-      const labels = (data.daily||[]).map(r => fmtDateOnly(r.tanggal));
-      const vals   = (data.daily||[]).map(r => Number(r.total));
-      _charts['rekapChart'] = new Chart(document.getElementById('rekapChart'), {
-        type: 'bar',
-        data: { labels, datasets: [{ label:'Pendapatan', data: vals, backgroundColor: 'rgba(74,103,65,0.75)', borderRadius: 5, borderSkipped: false }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmtRp(c.raw, false) } } }, scales: { y: { grid: { color: '#e8ede4' }, ticks: { callback: v => fmtRp(v), font: { size: 10 } }, beginAtZero: true }, x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 45, autoSkip: true, maxTicksLimit: 15 } } } }
-      });
-      const prods = data.bestProducts || [];
-      const maxRev = prods.reduce((m,p) => Math.max(m, Number(p.revenue)), 1);
-      const barColors = ['','gold','amber','red','gray'];
-      document.getElementById('rekapProdBars').innerHTML = prods.map((p, i) => `
-        <div class="pbar-row"><div class="pbar-lbl"><span>${p.menu_name}</span><span>${fmtRp(p.revenue)} • ${p.sold} pcs</span></div>
-        <div class="pbar"><div class="pbar-fill ${barColors[i]||''}" style="width:${Math.round(Number(p.revenue)/maxRev*100)}%"></div></div></div>`).join('');
-      document.getElementById('rekapProdTbody').innerHTML = prods.map((p, i) => `<tr><td style="color:var(--muted);font-weight:700;">${i+1}</td><td class="prod-name">${p.menu_name}</td><td>${p.sold} pcs</td><td>${fmtRp(p.revenue, false)}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">Tidak ada data</td></tr>';
+      const labels = daily.map(r => fmtDateOnly(r.tanggal));
+      const vals = daily.map(r => Number(r.total));
+      const ctx = document.getElementById('rekapChart');
+      if (ctx && labels.length) {
+        _charts['rekapChart'] = new Chart(ctx, {
+          type: 'bar',
+          data: { labels, datasets: [{ label: 'Pendapatan', data: vals, backgroundColor: 'rgba(74,103,65,0.75)', borderRadius: 5 }] },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => fmtRp(c.raw, false) } } }, scales: { y: { beginAtZero: true, ticks: { callback: v => fmtRp(v) } } } }
+        });
+      }
+      
+      // Produk terlaris bars
+      const maxRev = bestProducts.reduce((m, p) => Math.max(m, Number(p.revenue)), 1);
+      const barColors = ['', 'gold', 'amber', 'red', 'gray'];
+      const pbarWrap = document.getElementById('rekapProdBars');
+      if (pbarWrap) {
+        pbarWrap.innerHTML = bestProducts.map((p, i) => `
+          <div class="pbar-row">
+            <div class="pbar-lbl"><span>${p.menu_name}</span><span>${fmtRp(p.revenue)} • ${p.sold} pcs</span></div>
+            <div class="pbar"><div class="pbar-fill ${barColors[i] || ''}" style="width:${Math.round(Number(p.revenue) / maxRev * 100)}%"></div></div>
+          </div>
+        `).join('');
+      }
+      
+      // Tabel produk terlaris
+      const prodTbody = document.getElementById('rekapProdTbody');
+      if (prodTbody) {
+        prodTbody.innerHTML = bestProducts.map((p, i) => `
+          <tr>
+            <td style="color:var(--muted);font-weight:700;">${i + 1}</td>
+            <td class="prod-name">${p.menu_name}</td>
+            <td>${p.sold} pcs</td>
+            <td>${fmtRp(p.revenue, false)}</td>
+          </td>
+        `).join('') || '<tr><td colspan="4" class="empty">Tidak ada数据</td></tr>';
+      }
+      
+      // Payment chart
       destroyChart('payChart');
-      const payData = data.paymentSummary || [];
       const payColors = { cash: '#4a6741', qris: '#8a6c2a' };
-      const payLabels = payData.map(p => p.payment_method.toUpperCase());
-      const payVals   = payData.map(p => Number(p.total_income));
-      const payTotal  = payVals.reduce((a,b)=>a+b,0);
-      document.getElementById('payLegend').innerHTML = payData.map((p, i) => `<span><span class="legend-dot" style="background:${Object.values(payColors)[i]||'#888'}"></span>${p.payment_method.toUpperCase()} — ${fmtRp(p.total_income)} (${payTotal > 0 ? Math.round(Number(p.total_income)/payTotal*100) : 0}%)</span>`).join('');
-      _charts['payChart'] = new Chart(document.getElementById('payChart'), {
-        type: 'doughnut',
-        data: { labels: payLabels, datasets: [{ data: payVals, backgroundColor: payData.map((p,i)=>Object.values(payColors)[i]||'#888'), borderWidth: 0, hoverOffset: 4 }] },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.label + ': ' + fmtRp(c.raw, false) } } } }
-      });
+      const payLabels = paymentSummary.map(p => p.payment_method.toUpperCase());
+      const payVals = paymentSummary.map(p => Number(p.total_income));
+      const payTotal = payVals.reduce((a, b) => a + b, 0);
+      
+      const payLegend = document.getElementById('payLegend');
+      if (payLegend) {
+        payLegend.innerHTML = paymentSummary.map((p, i) => `
+          <span>
+            <span class="legend-dot" style="background:${Object.values(payColors)[i] || '#888'}"></span>
+            ${p.payment_method.toUpperCase()} — ${fmtRp(p.total_income)} (${payTotal > 0 ? Math.round(Number(p.total_income) / payTotal * 100) : 0}%)
+          </span>
+        `).join('');
+      }
+      
+      const payChartCtx = document.getElementById('payChart');
+      if (payChartCtx && payLabels.length) {
+        _charts['payChart'] = new Chart(payChartCtx, {
+          type: 'doughnut',
+          data: { labels: payLabels, datasets: [{ data: payVals, backgroundColor: paymentSummary.map((p, i) => Object.values(payColors)[i] || '#888'), borderWidth: 0 }] },
+          options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.label + ': ' + fmtRp(c.raw, false) } } } }
+        });
+      }
     }
 
     function exportRekap() { exportTableCSV('rekapProdTable', 'rekap-produk-' + document.getElementById('rekapMonth').value + '-' + document.getElementById('rekapYear').value); }
 
-    /* ═══════════════════════════════════════════
-       PAGE: STOK
-    ═══════════════════════════════════════════ */
-    let _stokData = [];
-    async function loadStok() {
-      setLoading(true);
-      try { const data = await apiFetch(`${API_BASE}/stok`); _stokData = data.items || []; filterStok('all', document.querySelector('.in-tab.active')); }
-      catch(e) { document.getElementById('stokGrid').innerHTML = `<div class="err-row" style="grid-column:1/-1;"><i class="fa-solid fa-circle-exclamation"></i> Gagal memuat stok: ${e.message}</div>`; showToast('Gagal memuat stok', true); }
-      finally { setLoading(false); }
-    }
-    function filterStok(filter, btn) {
-      document.querySelectorAll('.in-tab').forEach(t => t.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-      let items = _stokData;
-      if (filter === 'kritis')  items = items.filter(i => i.stock <= 5);
-      if (filter === 'menipis') items = items.filter(i => i.stock > 5 && i.stock <= 10);
-      if (filter === 'aman')    items = items.filter(i => i.stock > 10);
-      renderStokGrid(items);
-    }
-    function renderStokGrid(items) {
-      const grid = document.getElementById('stokGrid');
-      if (!items.length) { grid.innerHTML = '<div class="empty" style="grid-column:1/-1;"><i class="fa-solid fa-box-open"></i>Tidak ada item</div>'; return; }
-      const maxStock = Math.max(...items.map(i => Number(i.stock)), 1);
-      grid.innerHTML = items.map(item => {
-        const qty = Number(item.stock);
-        const pct = Math.min(Math.round(qty / maxStock * 100), 100);
-        const [cls, fillCls, qCls] = qty <= 5 ? ['crit','pbar-fill red','crit'] : qty <= 10 ? ['warn','pbar-fill amber','warn'] : ['ok','pbar-fill','ok'];
-        return `<div class="stok-big-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;"><div><div class="stok-big-name">${item.name}</div><div class="stok-big-cat">${item.kategori_name||'Umum'} • ${item.is_available ? '<span style="color:var(--brand);">Tersedia</span>' : '<span style="color:var(--red);">Nonaktif</span>'}</div></div><span class="badge ${cls==='crit'?'b-slow':cls==='warn'?'b-pop':'b-best'}">${cls==='crit'?'Kritis':cls==='warn'?'Menipis':'Aman'}</span></div><div class="stok-big-qty" style="color:var(--${qCls==='ok'?'brand':qCls==='warn'?'amber':'red'})">${qty}</div><div class="stok-pbar"><div class="${fillCls}" style="width:${pct}%"></div></div><div class="stok-big-footer"><span>Harga: ${fmtRp(item.price, false)}</span><span>${pct}% stok tersisa</span></div></div>`;
-      }).join('');
-    }
-
-    /* ═══════════════════════════════════════════
-       PAGE: LAPORAN
-    ═══════════════════════════════════════════ */
+    // PAGE: LAPORAN
     function initLaporanFilters() {
       const tgl = document.getElementById('lapTgl');
       if (!tgl.value) tgl.value = new Date().toISOString().split('T')[0];
@@ -375,9 +441,7 @@
       tbody.innerHTML = orders.map(o => `<tr><td><code style="font-size:11px;color:var(--brand);">${o.order_code}</code></td><td>${o.customer_name||'—'}</td><td style="font-weight:700;">${fmtRp(o.total_price)}</td><td>${payIcon(o.payment_method)}</td><td>${statusBadgeHtml(o.status)}</td><td style="color:var(--muted);font-size:11px;">${fmtDate(o.created_at)}</td></tr>`).join('');
     }
 
-    /* ═══════════════════════════════════════════
-       PAGE: KELOLA MENU
-    ═══════════════════════════════════════════ */
+    // PAGE: KELOLA MENU
     let _menuData     = [];
     let _kategoriData = [];
     let _menuKatFilter = 'all';
@@ -404,7 +468,10 @@
     function buildMenuKatTabs() {
       const wrap = document.getElementById('menuKatTabs');
       wrap.innerHTML = `<button class="in-tab ${_menuKatFilter==='all'?'active':''}" onclick="filterMenuKat('all',this)" data-kat="all">Semua</button>`;
-      if (!_kategoriData.length) return;
+            if (!_kategoriData.length) {
+        sel.innerHTML += '<option value="" disabled>Belum ada kategori. Refresh atau cek tabel kategori.</option>';
+        return;
+      }
       _kategoriData.forEach(k => {
         const btn = document.createElement('button');
         btn.className = 'in-tab' + (_menuKatFilter == k.id ? ' active' : '');
@@ -427,7 +494,6 @@
       document.getElementById('menuStatTotal').textContent    = items.length;
       document.getElementById('menuStatAvail').textContent    = items.filter(i=>i.is_available).length;
       document.getElementById('menuStatInactive').textContent = items.filter(i=>!i.is_available).length;
-      document.getElementById('menuStatLow').textContent      = items.filter(i=>i.stock<=5).length;
     }
 
     function renderMenuGrid() {
@@ -447,14 +513,12 @@
           ? `<div class="menu-card-img"><img src="${item.image_url}" alt="${item.name}" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:var(--brand-pale);font-size:36px;\\'>☕</div>'" /></div>`
           : `<div class="menu-card-img-placeholder">☕</div>`;
         const katName = (_kategoriData.find(k => k.id == item.kategori_id) || {}).name || '—';
-        const stockCls = item.stock <= 5 ? 'b-slow' : item.stock <= 10 ? 'b-pop' : 'b-best';
         return `
           <div class="menu-card">
             ${imgHtml}
             <div class="menu-card-body">
               <div class="menu-card-name">${item.name}</div>
               <div class="menu-card-cat">${katName}</div>
-              <div style="font-size:10px;color:var(--muted);">Stok: <span class="badge ${stockCls}">${item.stock}</span></div>
               <div class="menu-card-price">${fmtRp(item.price, false)}</div>
             </div>
             <div class="menu-card-footer">
@@ -477,7 +541,6 @@
       document.getElementById('menuId').value = '';
       document.getElementById('menuName').value = '';
       document.getElementById('menuPrice').value = '';
-      document.getElementById('menuStock').value = '';
       document.getElementById('menuAvailable').checked = true;
       document.getElementById('menuImageUrl').value = '';
       resetImgUpload();
@@ -493,7 +556,6 @@
       document.getElementById('menuId').value       = item.id;
       document.getElementById('menuName').value     = item.name;
       document.getElementById('menuPrice').value    = item.price;
-      document.getElementById('menuStock').value    = item.stock;
       document.getElementById('menuAvailable').checked = !!item.is_available;
       document.getElementById('menuImageUrl').value = item.image_url || '';
       populateKategoriSelect(item.kategori_id);
@@ -560,7 +622,6 @@
       const name      = document.getElementById('menuName').value.trim();
       const kategoriId= document.getElementById('menuKategori').value;
       const price     = document.getElementById('menuPrice').value;
-      const stock     = document.getElementById('menuStock').value;
       const available = document.getElementById('menuAvailable').checked;
       const imageUrl  = document.getElementById('menuImageUrl').value.trim();
 
@@ -568,7 +629,7 @@
       if (!kategoriId) { showToast('Pilih kategori', true); return; }
       if (!price)      { showToast('Harga wajib diisi', true); return; }
 
-      const payload = { name, kategori_id: kategoriId, price, stock, is_available: available, image_url: imageUrl };
+      const payload = { name, kategori_id: kategoriId, price, is_available: available, image_url: imageUrl };
 
       setLoading(true);
       try {
@@ -604,9 +665,7 @@
       } finally { setLoading(false); }
     }
 
-    /* ═══════════════════════════════════════════
-       PAGE: MEJA & QR CODE
-    ═══════════════════════════════════════════ */
+    // PAGE: MEJA & QR CODE
     let _mejaData = [];
 
     async function loadMeja() {
@@ -868,14 +927,111 @@
       } finally { setLoading(false); }
     }
 
-    /* ═══════════════════════════════════════════
-       PAGE: ANTREAN
-    ═══════════════════════════════════════════ */
+    // PAGE: ANTREAN
     async function loadAntrean() {
       setLoading(true);
       try { const data = await apiFetch(`${API_BASE}/antrean`); renderAntrean(data); }
       catch(e) { showToast('Gagal memuat antrean: ' + e.message, true); }
       finally { setLoading(false); }
+    }
+
+    async function loadUsers() {
+      console.log("🔄 Loading users...");
+      
+      // Tunggu sebentar agar DOM siap
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
+      const tbody = document.getElementById('usersTbody');
+      if (!tbody) {
+        console.error("Element usersTbody tidak ditemukan! Mencoba lagi dalam 0.5 detik...");
+        setTimeout(() => loadUsers(), 500);
+        return;
+      }
+      
+      tbody.innerHTML = '<tr><td colspan="6" class="empty">Memuat…</td></tr>';
+      try {
+        const data = await apiFetch(`${API_BASE}/users`);
+        console.log("Users data:", data);
+        
+        const users = data.users || [];
+        
+        if (!users.length) {
+          tbody.innerHTML = '<tr><td colspan="6" class="empty">Belum ada user</td></tr>';
+          return;
+        }
+        
+        tbody.innerHTML = users.map((u, i) => `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${u.name || '—'}</td>
+            <td>${u.username}</td>
+            <td><span style="padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:${u.role === 'admin' ? '#ebf8ff' : '#f0fff4'};color:${u.role === 'admin' ? '#2b6cb0' : '#276749'}">${u.role}</span></td>
+            <td>${fmtDate(u.created_at)}</td>
+            <td><button onclick="deleteUser(${u.id},'${u.username}')" style="padding:4px 10px;border:1px solid #fed7d7;border-radius:6px;background:#fff5f5;color:#c53030;cursor:pointer;font-size:12px;"><i class="fa-solid fa-trash"></i> Hapus</button></td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error("Load users error:", e);
+        tbody.innerHTML = '<tr><td colspan="6" class="empty">Gagal memuat data</td></tr>';
+      }
+    }
+
+    // Delete user
+    async function deleteUser(id, username) {
+      if (!confirm(`Hapus user "${username}"?`)) return;
+      try {
+        await apiFetch(`${API_BASE}/users/${id}`, { method: 'DELETE' });
+        showToast('User berhasil dihapus');
+        loadUsers(); // Refresh tabel
+      } catch (e) {
+        showToast(e.message || 'Gagal menghapus user', true);
+      }
+    }
+
+    // Open modal add user
+    function openModalUser() {
+      document.getElementById('uName').value = '';
+      document.getElementById('uUsername').value = '';
+      document.getElementById('uPassword').value = '';
+      document.getElementById('modalUserErr').style.display = 'none';
+      const modal = document.getElementById('modalUser');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function closeModalUser() {
+      const modal = document.getElementById('modalUser');
+      if (modal) modal.style.display = 'none';
+    }
+
+    async function submitUser() {
+      const name = document.getElementById('uName').value.trim();
+      const username = document.getElementById('uUsername').value.trim();
+      const password = document.getElementById('uPassword').value;
+      const errEl = document.getElementById('modalUserErr');
+      
+      if (!username || !password) {
+        if (errEl) {
+          errEl.textContent = 'Username dan password wajib diisi';
+          errEl.style.display = 'block';
+        }
+        return;
+      }
+      
+      try {
+        await apiFetch(`${API_BASE}/users`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, username, password, role: 'kasir' })
+        });
+        closeModalUser();
+        showToast('User kasir berhasil ditambahkan!');
+        loadUsers();
+      } catch (e) {
+        if (errEl) {
+          errEl.textContent = e.message || 'Gagal menyimpan user';
+          errEl.style.display = 'block';
+        }
+      }
     }
 
     function renderAntrean(data) {
@@ -901,16 +1057,12 @@
       tbody.innerHTML = selesai.map(o => `<tr><td><code style="font-size:11px;color:var(--brand);">${o.order_code}</code></td><td>${o.customer_name||'—'}</td><td style="font-weight:700;">${fmtRp(o.total_price)}</td><td>${payIcon(o.payment_method)}</td><td style="color:var(--muted);font-size:11px;">${fmtDate(o.created_at)}</td></tr>`).join('');
     }
 
-    /* ═══════════════════════════════════════════
-       CONFIRM MODAL
-    ═══════════════════════════════════════════ */
+    // CONFIRM MODAL
     function closeConfirm() {
       document.getElementById('modalConfirm').classList.add('hidden');
     }
 
-    /* ═══════════════════════════════════════════
-       EXPORT CSV
-    ═══════════════════════════════════════════ */
+    // EXPORT CSV
     function exportTableCSV(tableId, filename) {
       const table = document.getElementById(tableId);
       if (!table) { showToast('Tabel tidak ditemukan', true); return; }
@@ -924,56 +1076,19 @@
       showToast('Export CSV berhasil!');
     }
 
-    /* ═══════════════════════════════════════════
-       LOGOUT
-    ═══════════════════════════════════════════ */
+    // LOGOUT
     function handleLogout() {
-      if (confirm('Yakin ingin logout?')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.replace('/login');
-      }
+      if (confirm('Yakin ingin logout?')) window.location.href = '/login';
     }
 
-    /* ═══════════════════════════════════════════
-       AUTO REFRESH ANTREAN (30s)
-    ═══════════════════════════════════════════ */
+    // AUTO REFRESH ANTREAN (30s)
     setInterval(() => { if (currentPage === 'antrean') loadAntrean(); }, 30_000);
 
-    /* ═══════════════════════════════════════════
-       INIT
-    ═══════════════════════════════════════════ */
+    // INIT
     document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('page-sub').textContent = todayLabel();
       loadDashboard();
     });
-
-    /* ═══════════════════════════════════════════
-       USER MANAGEMENT
-    ═══════════════════════════════════════════ */
-    async function loadUsers() {
-      const tbody = document.getElementById('usersTbody');
-      tbody.innerHTML = '<tr><td colspan="6" class="empty">Memuat…</td></tr>';
-      try {
-        const data = await apiFetch(`${API_BASE}/users`);
-        const users = data?.users || [];
-        if (!users.length) {
-          tbody.innerHTML = '<tr><td colspan="6" class="empty">Belum ada user</td></tr>';
-          return;
-        }
-        tbody.innerHTML = users.map((u, i) => `
-          <tr>
-            <td>${i + 1}</td>
-            <td>${u.name || '—'}</td>
-            <td>${u.username}</td>
-            <td><span style="padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:${u.role==='admin'?'#ebf8ff':'#f0fff4'};color:${u.role==='admin'?'#2b6cb0':'#276749'}">${u.role}</span></td>
-            <td>${fmtDate(u.created_at)}</td>
-            <td><button onclick="deleteUser(${u.id},'${u.username}')" style="padding:4px 10px;border:1px solid #fed7d7;border-radius:6px;background:#fff5f5;color:#c53030;cursor:pointer;font-size:12px;"><i class="fa-solid fa-trash"></i></button></td>
-          </tr>`).join('');
-      } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="6" class="empty">Gagal memuat data</td></tr>';
-      }
-    }
 
     function openModalUser() {
       document.getElementById('uName').value = '';

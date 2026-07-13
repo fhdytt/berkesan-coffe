@@ -3,20 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="api-url" content="RAILWAY_BACKEND_URL">
     <title>Berkesan Coffee | Order</title>
-    <link rel="icon" type="image/png" href="/assets/img/berkesan_logo.png">
-    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/order.css" />
+    <link rel="icon" href="/assets/img/berkesan_logo.png">
   </head>
   <body class="app-bg min-h-screen">
     <!-- HEADER -->
@@ -27,10 +20,8 @@
         class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4"
       >
         <div class="flex items-center gap-3 min-w-0">
-          <div
-            class="w-11 h-11 rounded-xl brand flex items-center justify-center shrink-0"
-          >
-            <img src="/assets/img/berkesan_logo.png" alt="logo">
+          <div class="w-11 h-11 rounded-xl items-center justify-center shrink-0">
+            <img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 48px; height: 48px; object-fit: contain;">
           </div>
           <div class="min-w-0">
             <h1 class="text-lg sm:text-2xl font-black truncate">
@@ -152,73 +143,121 @@
     <!-- CHECKOUT MODAL -->
     <div
       id="checkoutModal"
-      class="modal fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
-    >
-      <div
-        class="modal-box bg-[#fffdf8] w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl p-5 max-h-[92vh] overflow-auto"
-      >
-        <div class="flex items-center justify-between mb-4">
+      class="modal fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <div id="checkoutModalBox" class="modal-box bg-[#fffdf8] w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl max-h-[92vh] sm:max-h-[85vh] flex flex-col">
+
+        <!-- Drag Handle (mobile only, swipe ke bawah untuk menutup) -->
+        <div id="checkoutDragHandle" class="sm:hidden pt-3 pb-1 flex justify-center shrink-0 touch-none">
+          <div class="w-10 h-1.5 rounded-full bg-[#3f5f35]/20"></div>
+        </div>
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-5 pt-2 sm:pt-5 pb-4 border-b border-[#3f5f35]/10 shrink-0">
           <div>
-            <h3 class="text-xl font-black">Checkout</h3>
+            <h3 class="text-lg sm:text-xl font-black">Checkout</h3>
             <p class="text-sm text-[#66705e]" id="checkoutTableText">Meja -</p>
           </div>
-          <button
-            class="w-10 h-10 rounded-xl bg-[#ece7d8]"
-            onclick="closeCheckout()"
-          >
+          <!-- Tombol close (desktop only) -->
+          <button type="button" class="hidden sm:flex w-10 h-10 shrink-0 rounded-xl bg-[#ece7d8] items-center justify-center" onclick="closeCheckout()">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
-        <div id="checkoutItems" class="space-y-2 mb-4"></div>
-        <div
-          class="border-t border-[#3f5f35]/10 pt-4 mb-4 flex items-center justify-between"
-        >
-          <span class="font-bold">Total pembayaran</span>
-          <span id="checkoutTotal" class="text-2xl font-black text-[#3f5f35]"
-            >Rp 0</span
+
+        <!-- Scrollable content -->
+        <div class="flex-1 overflow-y-auto px-5 py-4">
+          <div id="checkoutItems" class="space-y-2 mb-4"></div>
+          <div class="border-t border-[#3f5f35]/10 pt-4 mb-4 flex items-center justify-between">
+            <span class="font-bold">Total pembayaran</span>
+            <span id="checkoutTotal" class="text-xl sm:text-2xl font-black text-[#3f5f35]">Rp 0</span>
+          </div>
+
+          <!-- Nama Customer -->
+          <label class="text-xs font-black text-[#66705e] uppercase"
+            >Nama customer</label
           >
+          <input
+            id="customerName"
+            class="w-full mt-2 mb-4 px-4 py-3 rounded-xl border border-[#3f5f35]/20 bg-white outline-none focus:border-[#3f5f35] text-base"
+            placeholder="Opsional"
+          />
+
+          <!-- Metode Pembayaran -->
+          <div class="mb-4">
+            <label class="text-xs font-black text-[#66705e] uppercase block mb-2"
+              >Metode pembayaran</label
+            >
+            <div class="grid grid-cols-3 gap-2 sm:gap-3">
+              <!-- QRIS -->
+              <button
+                class="payment-btn brand-soft rounded-xl p-2.5 sm:p-4 text-center border-2 border-transparent hover:border-[#3f5f35] transition-all flex flex-col items-center gap-1.5 sm:gap-2"
+                data-payment="qris"
+                onclick="selectPayment('qris', this)"
+              >
+                <i class="fa-solid fa-qrcode text-lg sm:text-xl"></i>
+                <div>
+                  <p class="font-black text-xs sm:text-base leading-tight">QRIS</p>
+                  <p class="hidden sm:block text-xs opacity-70">Scan via e-wallet</p>
+                </div>
+              </button>
+
+              <!-- Cash -->
+              <button
+                class="payment-btn rounded-xl p-2.5 sm:p-4 text-center border-2 border-transparent hover:border-[#3f5f35] transition-all bg-white flex flex-col items-center gap-1.5 sm:gap-2"
+                data-payment="cash"
+                onclick="selectPayment('cash', this)"
+              >
+                <i class="fa-solid fa-money-bill-wave text-lg sm:text-xl"></i>
+                <div>
+                  <p class="font-black text-xs sm:text-base leading-tight">Cash</p>
+                  <p class="hidden sm:block text-xs opacity-70">Bayar tunai</p>
+                </div>
+              </button>
+
+              <!-- Bank Transfer -->
+              <button
+                class="payment-btn rounded-xl p-2.5 sm:p-4 text-center border-2 border-transparent hover:border-[#3f5f35] transition-all bg-white flex flex-col items-center gap-1.5 sm:gap-2"
+                data-payment="bank_transfer"
+                onclick="selectPayment('bank_transfer', this)"
+              >
+                <i class="fa-solid fa-building-columns text-lg sm:text-xl"></i>
+                <div>
+                  <p class="font-black text-xs sm:text-base leading-tight">Transfer</p>
+                  <p class="hidden sm:block text-xs opacity-70">BCA, Mandiri, BNI</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Informasi Pembayaran yang Dipilih -->
+          <div id="paymentInfo" class="hidden mb-4 p-3 rounded-xl bg-[#ece7d8] text-sm">
+            <div class="flex items-start gap-2">
+              <i class="fa-solid fa-circle-info mt-1 text-[#836527]"></i>
+              <div>
+                <p class="font-bold text-[#3f5f35]" id="paymentInfoTitle">QRIS</p>
+                <p class="text-[#66705e]" id="paymentInfoDesc">Scan QRIS di kasir atau layar berikutnya</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Catatan Pesanan -->
+          <textarea
+            id="orderNotes"
+            class="w-full mb-2 px-4 py-3 rounded-xl border border-[#3f5f35]/20 bg-white outline-none focus:border-[#3f5f35] text-base"
+            rows="2"
+            placeholder="Catatan pesanan (opsional)"
+          ></textarea>
         </div>
-        <label class="text-xs font-black text-[#66705e] uppercase"
-          >Nama customer</label
-        >
-        <input
-          id="customerName"
-          class="w-full mt-2 mb-4 px-4 py-3 rounded-xl border border-[#3f5f35]/20 bg-white outline-none focus:border-[#3f5f35]"
-          placeholder="Opsional"
-        />
-        <label class="text-xs font-black text-[#66705e] uppercase"
-          >Metode pembayaran</label
-        >
-        <div class="grid grid-cols-2 gap-3 mt-2 mb-4">
+
+        <!-- Footer (dengan safe-area untuk iOS) -->
+        <div class="px-5 py-4 border-t border-[#3f5f35]/10 bg-[#fffdf8] shrink-0" style="padding-bottom: max(1rem, env(safe-area-inset-bottom));">
           <button
-            class="payment-btn brand-soft rounded-xl p-4 text-left border-2 border-transparent"
-            data-payment="qris"
+            id="submitOrderBtn"
+            class="brand w-full py-4 rounded-xl font-black"
           >
-            <i class="fa-solid fa-qrcode mb-3"></i>
-            <p class="font-black">QRIS</p>
-            <p class="text-xs opacity-70">Scan ke kasir</p>
-          </button>
-          <button
-            class="payment-btn rounded-xl p-4 text-left border-2 border-transparent bg-white"
-            data-payment="cash"
-          >
-            <i class="fa-solid fa-money-bill-wave mb-3"></i>
-            <p class="font-black">Cash</p>
-            <p class="text-xs opacity-70">Bayar ke kasir</p>
+            Buat Pesanan
           </button>
         </div>
-        <textarea
-          id="orderNotes"
-          class="w-full mb-4 px-4 py-3 rounded-xl border border-[#3f5f35]/20 bg-white outline-none focus:border-[#3f5f35]"
-          rows="2"
-          placeholder="Catatan pesanan, opsional"
-        ></textarea>
-        <button
-          id="submitOrderBtn"
-          class="brand w-full py-4 rounded-xl font-black"
-        >
-          Buat Pesanan
-        </button>
+
       </div>
     </div>
 
@@ -340,7 +379,7 @@
       </div>
     </div>
 
-    <script src="/js/api.config.js"></script>
-    <script src="/js/order.js"></script>
+    <script src="/assets/js/api.config.js"></script>
+    <script src="/assets/js/order.js"></script>
   </body>
 </html>

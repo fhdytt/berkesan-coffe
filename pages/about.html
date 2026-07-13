@@ -4,24 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Berkesan Coffee | Tentang Kami</title>
-    <link rel="icon" type="image/png" href="/assets/img/berkesan_logo.png">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="/assets/css/about.css" />
+    <link rel="icon" href="/assets/img/berkesan_logo.png">
   </head>
 
   <body class="min-h-screen overflow-x-hidden">
+    <!-- Scroll Progress -->
+    <div class="scroll-progress"></div>
+
     <!-- Background Decoration -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
       <div
-        class="absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-30 bg-[#bfc56b]"
+        class="parallax-blob absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-30 bg-[#bfc56b]"
       ></div>
       <div
-        class="absolute bottom-0 right-0 w-[30rem] h-[30rem] rounded-full blur-3xl opacity-20 bg-[#836527]"
+        class="parallax-blob absolute bottom-0 right-0 w-[30rem] h-[30rem] rounded-full blur-3xl opacity-20 bg-[#836527]"
       ></div>
+      <span class="bean-particle" style="top:12%; left:18%;">🫘</span>
+      <span class="bean-particle" style="top:65%; left:82%; animation-delay:2.5s;">🫘</span>
+      <span class="bean-particle" style="top:38%; left:55%; animation-delay:5s;">🫘</span>
+      <span class="bean-particle" style="top:80%; left:30%; animation-delay:1.2s;">🫘</span>
     </div>
 
     <div class="relative z-10 max-w-7xl mx-auto px-5 lg:px-10">
@@ -39,9 +43,9 @@
         </div>
 
         <div class="hidden md:flex items-center gap-8 text-sm font-medium">
-          <a href="#" class="text-[#836527] hover:text-[#63773c] transition">Tentang</a>
-          <a href="#signature" class="text-[#63773c] hover:text-[#836527] transition">Signature</a>
-          <a href="/order" class="bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-5 py-2 rounded-full transition shadow-lg">Pesan</a>
+          <a href="#" class="nav-link text-[#836527] hover:text-[#63773c] transition">Tentang</a>
+          <a href="#signature" class="nav-link text-[#63773c] hover:text-[#836527] transition">Signature</a>
+          <a href="/order" class="magnetic-btn bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-5 py-2 rounded-full transition shadow-lg">Pesan</a>
         </div>
 
         <!-- Hamburger Button (mobile) -->
@@ -58,21 +62,21 @@
       </div>
 
       <!-- HERO -->
-      <section class="py-20 lg:py-28 text-center fade-up">
+      <section class="reveal py-20 lg:py-28 text-center">
         <div
-          class="floating inline-flex items-center justify-center w-28 h-28 rounded-full bg-[#63773c] shadow-2xl mb-8"
+          class="floating inline-flex items-center justify-center w-28 h-28 rounded-full shadow-2xl mb-8"
         >
-          <img src="/assets/img/berkesan_logo.png" alt="logo">
+          <div class="sb-ico"><img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 98px; height: 98px; object-fit: contain;"></div>
         </div>
 
         <h1
-          class="font-display text-5xl md:text-7xl font-bold text-[#050503] leading-tight"
+          class="shimmer-text font-display text-5xl md:text-7xl font-bold leading-tight"
         >
           tentang ruang & rasa
         </h1>
 
         <p
-          class="mt-6 max-w-3xl mx-auto text-lg md:text-xl text-[#63773c] leading-relaxed"
+          class="split-words mt-6 max-w-3xl mx-auto text-lg md:text-xl text-[#63773c] leading-relaxed"
         >
           “lebih dari kedai kopi, inilah rumah untuk berbagi cerita”
         </p>
@@ -81,7 +85,7 @@
       <!-- STORY -->
       <section class="grid lg:grid-cols-2 gap-10 items-center mb-24">
         <!-- Left -->
-        <div class="fade-up">
+        <div class="reveal">
           <div
             class="inline-flex items-center gap-2 bg-[#bfc56b]/40 border border-[#63773c]/20 px-5 py-2 rounded-full text-sm font-semibold text-[#63773c] mb-6"
           >
@@ -105,7 +109,7 @@
               yang dirasakan.
             </p>
 
-            <div class="bg-[#63773c] text-[#f7facc] p-6 rounded-3xl shadow-xl">
+            <div class="quote-glow bg-[#63773c] text-[#f7facc] p-6 rounded-3xl shadow-xl">
               <div class="flex items-start gap-4">
                 <i class="fas fa-quote-left text-2xl mt-1"></i>
 
@@ -124,7 +128,7 @@
         </div>
 
         <!-- Right -->
-        <div class="fade-up">
+        <div class="reveal">
           <div
             class="relative bg-[#836527] rounded-[2rem] p-10 overflow-hidden shadow-2xl"
           >
@@ -133,7 +137,12 @@
             ></div>
 
             <div class="relative z-10 text-center">
-              <div class="text-8xl mb-6">☕</div>
+              <div class="cup-bounce steam-wrap text-8xl mb-6">
+                ☕
+                <span class="steam steam-1"></span>
+                <span class="steam steam-2"></span>
+                <span class="steam steam-3"></span>
+              </div>
 
               <h3 class="font-display text-3xl font-bold text-[#f7facc] mb-4">
                 Connecting worlds through Coffee.
@@ -144,10 +153,12 @@
               </p>
 
               <button
-                class="mt-8 bg-[#f7facc] text-[#836527] hover:bg-[#bfc56b] px-6 py-3 rounded-full font-semibold transition shadow-lg"
+                class="magnetic-btn mt-8 bg-[#f7facc] text-[#836527] hover:bg-[#bfc56b] px-6 py-3 rounded-full font-semibold transition shadow-lg"
               >
-                <i class="fas fa-heart mr-2"></i>
-                Rasakan Ceritanya
+                <a href="/order" class="inline-flex items-center">
+                  <i class="fas fa-heart mr-2"></i>
+                  Rasakan Ceritanya
+                </a>
               </button>
             </div>
           </div>
@@ -156,7 +167,7 @@
 
       <!-- VALUES -->
       <section class="mb-24">
-        <div class="text-center mb-14 fade-up">
+        <div class="reveal text-center mb-14">
           <h2 class="font-display text-5xl font-bold text-[#050503] mb-4">
             inti dari setiap cangkir
           </h2>
@@ -166,10 +177,10 @@
           </p>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-8">
+        <div class="reveal reveal-stagger grid md:grid-cols-3 gap-8">
           <!-- CARD -->
           <div
-            class="bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl hover:-translate-y-2 transition"
+            class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl"
           >
             <div
               class="w-16 h-16 rounded-2xl bg-[#63773c] flex items-center justify-center mb-6"
@@ -187,7 +198,7 @@
 
           <!-- CARD -->
           <div
-            class="bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl hover:-translate-y-2 transition"
+            class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl"
           >
             <div
               class="w-16 h-16 rounded-2xl bg-[#836527] flex items-center justify-center mb-6"
@@ -205,7 +216,7 @@
 
           <!-- CARD -->
           <div
-            class="bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl hover:-translate-y-2 transition"
+            class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl"
           >
             <div
               class="w-16 h-16 rounded-2xl bg-[#bfc56b] flex items-center justify-center mb-6"
@@ -224,9 +235,9 @@
       </section>
 
       <!-- SIGNATURE -->
-      <section id="signature" class="mb-24">
+      <section id="signature" class="reveal mb-24">
         <div
-          class="bg-[#050503] rounded-[3rem] overflow-hidden p-10 md:p-14 shadow-2xl"
+          class="curtain-reveal bg-[#050503] rounded-[3rem] overflow-hidden p-10 md:p-14 shadow-2xl"
         >
           <div class="text-center mb-14">
             <div
@@ -241,10 +252,10 @@
             </h2>
           </div>
 
-          <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="reveal-stagger flex flex-wrap justify-center gap-6">
             <!-- ITEM -->
             <div
-              class="bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition"
+              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
             >
               <div class="text-5xl mb-5">🌿</div>
 
@@ -260,7 +271,7 @@
 
             <!-- ITEM -->
             <div
-              class="bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition"
+              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
             >
               <div class="text-5xl mb-5">⏳</div>
 
@@ -273,7 +284,7 @@
 
             <!-- ITEM -->
             <div
-              class="bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition"
+              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
             >
               <div class="text-5xl mb-5">🤝</div>
 
@@ -286,7 +297,7 @@
 
             <!-- ITEM -->
             <div
-              class="bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition"
+              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
             >
               <div class="text-5xl mb-5">🌙</div>
 
@@ -299,7 +310,7 @@
 
             <!-- ITEM -->
             <div
-              class="bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition"
+              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
             >
               <div class="text-5xl mb-5">🍓</div>
 
@@ -316,7 +327,7 @@
       </section>
 
       <!-- CONTACT -->
-      <section class="mb-24">
+      <section class="reveal mb-24">
         <div
           class="bg-[#bfc56b]/20 border border-[#63773c]/10 rounded-[2.5rem] p-10 text-center shadow-xl"
         >
@@ -338,16 +349,16 @@
 
           <div class="flex flex-wrap justify-center gap-4">
             <button
-              class="bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-7 py-3 rounded-full font-semibold transition shadow-lg"
+              class="magnetic-btn bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-7 py-3 rounded-full font-semibold transition shadow-lg"
             >
-              <a href="https://wa.me/6287885190765">
+              <a href="https://wa.me/6287885190765" >
                 <i class="fab fa-whatsapp mr-2"></i>
                 Hubungi Kami
               </a>
             </button>
 
             <button
-              class="border border-[#63773c] text-[#63773c] hover:bg-[#63773c] hover:text-[#f7facc] px-7 py-3 rounded-full font-semibold transition"
+              class="magnetic-btn border border-[#63773c] text-[#63773c] hover:bg-[#63773c] hover:text-[#f7facc] px-7 py-3 rounded-full font-semibold transition"
             >
               <a href="https://maps.app.goo.gl/H3Qmq6hthP3yPEUf6">
                 <i class="fas fa-location-dot mr-2"></i>
@@ -371,17 +382,87 @@
         "Kopi yang dikenang, karena cerita yang terbagi"
       </p>
     </footer>
-  <script>
-    const toggle = document.getElementById('menu-toggle');
-    const mobileMenu = document.getElementById('mobile-menu');
-    toggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-      mobileMenu.classList.toggle('flex');
-    });
-    document.getElementById('mobile-signature').addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      mobileMenu.classList.remove('flex');
-    });
-  </script>
+    <script>
+      const toggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      toggle.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        mobileMenu.classList.toggle('flex');
+      });
+      document.getElementById('mobile-signature').addEventListener('click', () => {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+      });
+
+      // ===== Scroll progress bar =====
+      const progressBar = document.querySelector('.scroll-progress');
+      window.addEventListener('scroll', () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        progressBar.style.width = pct + '%';
+      });
+
+      // ===== Split kata untuk animasi reveal per kata =====
+      document.querySelectorAll('.split-words').forEach(el => {
+        const words = el.textContent.trim().split(/\s+/);
+        el.innerHTML = words
+          .map((w, i) => `<span class="word-span" style="animation-delay:${0.05 * i}s">${w}</span>`)
+          .join(' ');
+      });
+
+      // ===== Scroll reveal =====
+      const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      revealEls.forEach(el => io.observe(el));
+
+      // ===== Parallax blob mengikuti mouse =====
+      const blobs = document.querySelectorAll('.parallax-blob');
+      document.addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 40;
+        const y = (e.clientY / window.innerHeight - 0.5) * 40;
+        blobs.forEach((blob, i) => {
+          const factor = i % 2 === 0 ? 1 : -1;
+          blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+        });
+      });
+
+      // ===== Tilt 3D di card =====
+      document.querySelectorAll('.tilt-card').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = ((y - centerY) / centerY) * -6;
+          const rotateY = ((x - centerX) / centerX) * 6;
+          card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+        });
+      });
+
+      // ===== Magnetic button =====
+      document.querySelectorAll('.magnetic-btn').forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate(0, 0)';
+        });
+      });
+    </script>
   </body>
 </html>

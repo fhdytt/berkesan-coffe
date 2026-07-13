@@ -1,0 +1,19 @@
+:root {
+            --cream:    #f7facc;
+            --lime:     #bfc56b;
+            --forest:   #63773c;
+            --brown:    #836527;
+            --dark:     #050503;
+        }
+
+        body { font-family: 'Inter', sans-serif; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+        .animate-float { animation: float 5s ease-in-out infinite; }
+        
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 119, 60, 0.4); border-radius: 10px; }

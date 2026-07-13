@@ -70,11 +70,6 @@
                 else if(name.includes('Dia')) customMessage = '🌙 Dia: rasa yang selalu dirindukan, kenangan dalam setiap aroma.';
                 else customMessage = 'Nikmati keistimewaan dari setiap signature Berkesan Coffee.';
                 
-                // alert halus dengan modal sederhana? kita buat alert modern pakai modal sementara
-                // tapi tidak mengganggu, kita gunakan fungsi alert dengan style native tapi lebih baik pakai notifikasi sementara
-                // tetapi agar seamless, kita bisa gunakan modal dengan pesan khusus, untuk simplicity kita buat div toast manual? Tapi kita buat alert modern.
-                // Agar tetap pada nuansa about, kita gunakan confirm style? supaya imersif, kita pakai temporary snackbar sederhana (alert dengan style)
-                // lebih baik bikin toast kecil.
                 const toast = document.createElement('div');
                 toast.innerText = `✨ ${customMessage}`;
                 toast.style.position = 'fixed';

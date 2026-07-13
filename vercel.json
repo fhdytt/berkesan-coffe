@@ -1,14 +1,13 @@
 {
-  "outputDirectory": ".",
+  "version": 2,
   "routes": [
     { "src": "/assets/(.*)", "dest": "/public/assets/$1" },
-    { "src": "/js/(.*)", "dest": "/public/js/$1" },
-    { "src": "/order", "dest": "/public/pages/order.html" },
-    { "src": "/about", "dest": "/public/pages/about.html" },
-    { "src": "/login", "dest": "/public/pages/login.html" },
-    { "src": "/admin", "dest": "/admin/index.html" },
-    { "src": "/kasir", "dest": "/kasir/index.html" },
-    { "src": "/", "dest": "/index.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+    { "src": "/order",       "dest": "/pages/order.html" },
+    { "src": "/login",       "dest": "/pages/login.html" },
+    { "src": "/about",       "dest": "/pages/about.html" },
+    { "src": "/admin",       "dest": "/admin/index.html" },
+    { "src": "/kasir",       "dest": "/kasir/index.html" },
+    { "src": "/",            "dest": "/index.html" },
+    { "src": "/(.*)",        "dest": "/$1" }
   ]
 }

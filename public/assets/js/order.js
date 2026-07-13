@@ -1,5 +1,10 @@
 const rupiah = (v) => "Rp " + (Number(v) || 0).toLocaleString("id-ID");
 
+// API_URL dibaca dari api.config.js yang di-load sebelum file ini
+// - Production : dari <meta name="api-url"> di pages/order.html
+// - Lokal dev  : otomatis fallback ke http://localhost:3000
+console.log("Order page loaded, API_URL:", window.API_URL);
+
 const params = new URLSearchParams(window.location.search);
 let tableNumber =
   params.get("table") ||
@@ -46,20 +51,22 @@ async function apiJson(url, options = {}) {
 
 async function loadMenus() {
   const grid = document.getElementById("menuGrid");
-  grid.innerHTML =
-    '<div class="card rounded-xl p-6 col-span-full text-center text-[#66705e]">Memuat menu...</div>';
+  if (!grid) return;
+  grid.innerHTML = '<div class="card rounded-xl p-6 col-span-full text-center text-[#66705e]">Memuat menu...</div>';
   try {
-    const data = await apiJson(`${BACKEND_URL}/api/menu`);
+    const data = await apiJson(`${window.API_URL}/api/menu`);
     menus = data.items || [];
     buildCategories();
     renderMenus("all");
   } catch (err) {
+    console.error("Load menu error:", err);
     grid.innerHTML = `<div class="card rounded-xl p-6 col-span-full text-center text-red-700">Gagal memuat menu: ${err.message}</div>`;
   }
 }
 
 function buildCategories() {
   const tabs = document.getElementById("categoryTabs");
+  if (!tabs) return;
   const cats = [...new Set(menus.map((m) => normalizeCategory(m.kategori_name)))];
   tabs.innerHTML =
     '<button data-filter="all" class="filter-btn brand px-4 py-2 rounded-xl text-sm font-bold">Semua</button>' +
@@ -83,11 +90,13 @@ function buildCategories() {
 
 function renderMenus(filter) {
   const grid = document.getElementById("menuGrid");
+  const empty = document.getElementById("emptyMenu");
+  if (!grid) return;
   const visible =
     filter === "all"
       ? menus
       : menus.filter((m) => normalizeCategory(m.kategori_name) === filter);
-  document.getElementById("emptyMenu").classList.toggle("hidden", visible.length > 0);
+  if (empty) empty.classList.toggle("hidden", visible.length > 0);
   grid.innerHTML = visible
     .map((item) => {
       const qty = cart[item.id]?.quantity || 0;
@@ -102,7 +111,6 @@ function renderMenus(filter) {
             <div>
               <p class="text-xs font-bold text-[#836527]">${normalizeCategory(item.kategori_name)}</p>
               <h3 class="font-black text-lg mt-1">${item.name}</h3>
-              <p class="text-xs text-[#66705e] mt-1">Stok ${item.stock}</p>
             </div>
             <p class="font-black text-[#3f5f35]">${rupiah(item.price)}</p>
           </div>
@@ -121,7 +129,7 @@ function changeQty(id, delta) {
   const menu = menus.find((m) => m.id === id);
   if (!menu) return;
   const current = cart[id]?.quantity || 0;
-  const next = Math.max(0, Math.min(Number(menu.stock), current + delta));
+  const next = Math.max(0, current + delta);
   if (next === 0) delete cart[id];
   else
     cart[id] = {
@@ -139,8 +147,10 @@ function updateCart() {
   const items = Object.values(cart);
   const count = items.reduce((s, i) => s + i.quantity, 0);
   const total = items.reduce((s, i) => s + i.quantity * i.price, 0);
-  document.getElementById("cartCount").textContent = count;
-  document.getElementById("grandTotalDisplay").textContent = rupiah(total);
+  const cartCount = document.getElementById("cartCount");
+  const grandTotal = document.getElementById("grandTotalDisplay");
+  if (cartCount) cartCount.textContent = count;
+  if (grandTotal) grandTotal.textContent = rupiah(total);
 }
 
 // ─── Modal 1: Checkout ────────────────────────────────────────
@@ -155,47 +165,56 @@ function openCheckout() {
     return alert("Nomor meja wajib diisi sebelum checkout.");
   }
   const total = items.reduce((s, i) => s + i.quantity * i.price, 0);
-  document.getElementById("checkoutTableText").textContent = `Meja ${tableNumber}`;
-  document.getElementById("checkoutTotal").textContent = rupiah(total);
-  document.getElementById("checkoutItems").innerHTML = items
-    .map(
-      (item) => `
-    <div class="flex justify-between gap-3 bg-white rounded-xl p-3 border border-[#3f5f35]/10">
-      <div>
-        <p class="font-bold">${item.name}</p>
-        <p class="text-xs text-[#66705e]">${item.quantity} x ${rupiah(item.price)}</p>
-      </div>
-      <p class="font-black">${rupiah(item.quantity * item.price)}</p>
-    </div>`,
-    )
-    .join("");
-  document.getElementById("checkoutModal").classList.add("open");
+  const checkoutTable = document.getElementById("checkoutTableText");
+  const checkoutTotal = document.getElementById("checkoutTotal");
+  const checkoutItems = document.getElementById("checkoutItems");
+  if (checkoutTable) checkoutTable.textContent = `Meja ${tableNumber}`;
+  if (checkoutTotal) checkoutTotal.textContent = rupiah(total);
+  if (checkoutItems) {
+    checkoutItems.innerHTML = items
+      .map(
+        (item) => `
+      <div class="flex justify-between gap-3 bg-white rounded-xl p-3 border border-[#3f5f35]/10">
+        <div>
+          <p class="font-bold">${item.name}</p>
+          <p class="text-xs text-[#66705e]">${item.quantity} x ${rupiah(item.price)}</p>
+        </div>
+        <p class="font-black">${rupiah(item.quantity * item.price)}</p>
+      </div>`,
+      )
+      .join("");
+  }
+  const modal = document.getElementById("checkoutModal");
+  if (modal) modal.classList.add("open");
 }
 
 function closeCheckout() {
-  document.getElementById("checkoutModal").classList.remove("open");
+  const modal = document.getElementById("checkoutModal");
+  if (modal) modal.classList.remove("open");
+  resetCheckoutDragPosition();
 }
 
 // ─── Submit order ─────────────────────────────────────────────
 
 async function submitOrder() {
   const btn = document.getElementById("submitOrderBtn");
+  if (!btn) return;
   btn.disabled = true;
   btn.textContent = "Membuat pesanan...";
   try {
     const payload = {
       table_number: tableNumber,
       customer_name:
-        document.getElementById("customerName").value.trim() || `Meja ${tableNumber}`,
+        document.getElementById("customerName")?.value.trim() || `Meja ${tableNumber}`,
       payment_method: selectedPayment,
-      notes: document.getElementById("orderNotes").value.trim(),
+      notes: document.getElementById("orderNotes")?.value.trim() || "",
       items: Object.values(cart).map((item) => ({
         menu_item_id: item.menu_item_id,
         quantity: item.quantity,
       })),
     };
 
-    const data = await apiJson(`${BACKEND_URL}/api/order`, {
+    const data = await apiJson(`${window.API_URL}/api/order`, {
       method: "POST",
       body: JSON.stringify(payload),
     });
@@ -209,11 +228,9 @@ async function submitOrder() {
     if (selectedPayment === "qris") {
       openQrisModal();
     } else {
-      // Cash: langsung tampil kode order
       showOrderCode();
     }
 
-    // Reset cart
     cart = {};
     renderMenus(
       document.querySelector("#categoryTabs .brand")?.dataset.filter || "all",
@@ -231,12 +248,15 @@ async function submitOrder() {
 
 function openQrisModal() {
   const total = currentOrder?.total_price || 0;
-  document.getElementById("qrisTotal").textContent = rupiah(total);
-  document.getElementById("qrisModal").classList.add("open");
+  const qrisTotal = document.getElementById("qrisTotal");
+  if (qrisTotal) qrisTotal.textContent = rupiah(total);
+  const modal = document.getElementById("qrisModal");
+  if (modal) modal.classList.add("open");
 }
 
 function closeQrisModal() {
-  document.getElementById("qrisModal").classList.remove("open");
+  const modal = document.getElementById("qrisModal");
+  if (modal) modal.classList.remove("open");
 }
 
 function downloadQrisImage() {
@@ -256,15 +276,18 @@ function showOrderCode() {
   const order = currentOrder;
   const code = currentPaymentCode;
 
-  document.getElementById("ocCode").textContent = code || "—";
-  document.getElementById("ocMeja").textContent = `Meja ${order?.table_number || tableNumber}`;
-  document.getElementById("ocPayment").textContent =
-    order?.payment_method === "qris" ? "QRIS" : "Cash";
-  document.getElementById("ocTotal").textContent = rupiah(order?.total_price || 0);
+  const ocCode = document.getElementById("ocCode");
+  const ocMeja = document.getElementById("ocMeja");
+  const ocPayment = document.getElementById("ocPayment");
+  const ocTotal = document.getElementById("ocTotal");
+  if (ocCode) ocCode.textContent = code || "—";
+  if (ocMeja) ocMeja.textContent = `Meja ${order?.table_number || tableNumber}`;
+  if (ocPayment) ocPayment.textContent = order?.payment_method === "qris" ? "QRIS" : "Cash";
+  if (ocTotal) ocTotal.textContent = rupiah(order?.total_price || 0);
 
-  document.getElementById("orderCodeModal").classList.add("open");
+  const modal = document.getElementById("orderCodeModal");
+  if (modal) modal.classList.add("open");
 
-  // Render QR setelah modal muncul
   setTimeout(() => renderOrderQr(code), 80);
 }
 
@@ -284,16 +307,16 @@ function renderOrderQr(code, attempt = 0) {
     return;
   }
 
-  // Fallback: gambar dari API eksternal
   const wrap = canvas.parentElement;
-  wrap.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(code)}" width="200" height="200" class="mx-auto rounded-xl" alt="QR ${code}">`;
+  if (wrap) {
+    wrap.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=4&data=${encodeURIComponent(code)}" width="200" height="200" class="mx-auto rounded-xl" alt="QR ${code}">`;
+  }
 }
 
 function closeOrderCode() {
-  document.getElementById("orderCodeModal").classList.remove("open");
+  const modal = document.getElementById("orderCodeModal");
+  if (modal) modal.classList.remove("open");
 }
-
-// ─── Download QR order sebagai gambar ────────────────────────
 
 function downloadOrderCode() {
   const code = currentPaymentCode;
@@ -312,34 +335,26 @@ function downloadOrderCode() {
     offscreen.height = H;
     const ctx = offscreen.getContext("2d");
 
-    // Background
     ctx.fillStyle = "#fffdf8";
     ctx.fillRect(0, 0, W, H);
 
-    // White card behind QR
     ctx.fillStyle = "#ffffff";
-    ctx.beginPath();
-    ctx.roundRect(PAD - 4, PAD - 4, QR_SIZE + 8, QR_SIZE + 8, 12);
+    roundRect(ctx, PAD - 4, PAD - 4, QR_SIZE + 8, QR_SIZE + 8, 12);
     ctx.fill();
 
-    // QR image
     const img = new Image();
     img.onload = () => {
       ctx.drawImage(img, PAD, PAD, QR_SIZE, QR_SIZE);
 
-      // Green label area
       ctx.fillStyle = "#3f5f35";
-      ctx.beginPath();
-      ctx.roundRect(PAD - 4, PAD + QR_SIZE + 8, QR_SIZE + 8, LABEL_H, 12);
+      roundRect(ctx, PAD - 4, PAD + QR_SIZE + 8, QR_SIZE + 8, LABEL_H, 12);
       ctx.fill();
 
-      // Code text
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 28px Inter, sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(code, W / 2, PAD + QR_SIZE + 8 + 34);
 
-      // Sub info
       ctx.fillStyle = "rgba(255,255,255,0.55)";
       ctx.font = "12px Inter, sans-serif";
       ctx.fillText(
@@ -356,18 +371,9 @@ function downloadOrderCode() {
     img.src = qrDataUrl;
   };
 
-  // Generate QR data URL
-  if (window.QRCode && typeof QRCode.toDataURL === "function") {
-    QRCode.toDataURL(code, { width: QR_SIZE, margin: 1, color: { dark: "#172013", light: "#ffffff" } }, (err, url) => {
-      if (err) return;
-      doDownload(url);
-    });
-  } else {
-    // Fallback: pakai gambar dari canvas yang sudah dirender di modal
-    const existingCanvas = document.getElementById("orderQrCanvas");
-    if (existingCanvas && existingCanvas.width > 0) {
-      doDownload(existingCanvas.toDataURL());
-    }
+  const existingCanvas = document.getElementById("orderQrCanvas");
+  if (existingCanvas && existingCanvas.width > 0) {
+    doDownload(existingCanvas.toDataURL());
   }
 }
 
@@ -383,21 +389,78 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.lineTo(x, y + r);
   ctx.quadraticCurveTo(x, y, x + r, y);
   ctx.closePath();
+  ctx.fill();
+}
+
+// ─── Swipe-to-close: Checkout Modal (mobile) ───────────────────
+
+function resetCheckoutDragPosition() {
+  const box = document.getElementById("checkoutModalBox");
+  if (!box) return;
+  box.style.transition = "";
+  box.style.transform = "";
+}
+
+function initCheckoutSwipeToClose() {
+  const modalBox = document.getElementById("checkoutModalBox");
+  const dragHandle = document.getElementById("checkoutDragHandle");
+  if (!modalBox || !dragHandle) return;
+
+  let startY = 0;
+  let currentY = 0;
+  let isDragging = false;
+
+  function onTouchStart(e) {
+    isDragging = true;
+    startY = e.touches[0].clientY;
+    modalBox.style.transition = "none";
+  }
+
+  function onTouchMove(e) {
+    if (!isDragging) return;
+    currentY = e.touches[0].clientY - startY;
+    // Hanya izinkan geser ke bawah
+    if (currentY > 0) {
+      modalBox.style.transform = `translateY(${currentY}px)`;
+    }
+  }
+
+  function onTouchEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    modalBox.style.transition = "transform 200ms ease";
+
+    // Kalau geser lebih dari 100px, tutup modal
+    if (currentY > 100) {
+      modalBox.style.transform = "translateY(100%)";
+      setTimeout(() => {
+        closeCheckout();
+      }, 200);
+    } else {
+      // Kalau tidak cukup jauh, kembali ke posisi semula
+      modalBox.style.transform = "";
+    }
+    currentY = 0;
+  }
+
+  dragHandle.addEventListener("touchstart", onTouchStart, { passive: true });
+  dragHandle.addEventListener("touchmove", onTouchMove, { passive: true });
+  dragHandle.addEventListener("touchend", onTouchEnd);
 }
 
 // ─── Event listeners ──────────────────────────────────────────
 
-document.getElementById("saveTableBtn").addEventListener("click", () =>
-  setTable(document.getElementById("manualTableInput").value),
+document.getElementById("saveTableBtn")?.addEventListener("click", () =>
+  setTable(document.getElementById("manualTableInput")?.value || ""),
 );
-document.getElementById("resetButton").addEventListener("click", () => {
+document.getElementById("resetButton")?.addEventListener("click", () => {
   cart = {};
   renderMenus("all");
   updateCart();
 });
-document.getElementById("checkoutBtn").addEventListener("click", openCheckout);
-document.getElementById("cartButton").addEventListener("click", openCheckout);
-document.getElementById("submitOrderBtn").addEventListener("click", submitOrder);
+document.getElementById("checkoutBtn")?.addEventListener("click", openCheckout);
+document.getElementById("cartButton")?.addEventListener("click", openCheckout);
+document.getElementById("submitOrderBtn")?.addEventListener("click", submitOrder);
 
 document.querySelectorAll(".payment-btn").forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -414,3 +477,4 @@ document.querySelectorAll(".payment-btn").forEach((btn) => {
 setTable(tableNumber);
 loadMenus();
 updateCart();
+initCheckoutSwipeToClose();
