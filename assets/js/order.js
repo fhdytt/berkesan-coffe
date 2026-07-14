@@ -52,15 +52,31 @@ async function apiJson(url, options = {}) {
 async function loadMenus() {
   const grid = document.getElementById("menuGrid");
   if (!grid) return;
-  grid.innerHTML = '<div class="card rounded-xl p-6 col-span-full text-center text-[#66705e]">Memuat menu...</div>';
-  try {
-    const data = await apiJson(`${window.API_URL}/api/menu`);
-    menus = data.items || [];
-    buildCategories();
-    renderMenus("all");
-  } catch (err) {
-    console.error("Load menu error:", err);
-    grid.innerHTML = `<div class="card rounded-xl p-6 col-span-full text-center text-red-700">Gagal memuat menu: ${err.message}</div>`;
+
+  const MAX_RETRIES = 3;
+  const RETRY_DELAY_MS = 2000;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    grid.innerHTML = `<div class="card rounded-xl p-6 col-span-full text-center text-[#66705e]">
+      Memuat menu${attempt > 1 ? ` (percobaan ${attempt}/${MAX_RETRIES}...)` : "..."}
+    </div>`;
+    try {
+      const data = await apiJson(`${window.API_URL}/api/menu`);
+      menus = data.items || [];
+      buildCategories();
+      renderMenus("all");
+      return; // sukses, keluar
+    } catch (err) {
+      console.error(`Load menu error (attempt ${attempt}):`, err);
+      if (attempt < MAX_RETRIES) {
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
+      } else {
+        grid.innerHTML = `<div class="card rounded-xl p-6 col-span-full text-center text-red-700">
+          Gagal memuat menu: ${err.message}
+          <br><button onclick="loadMenus()" class="mt-3 px-4 py-2 rounded-xl border border-red-400 font-bold text-red-600 text-sm">Coba Lagi</button>
+        </div>`;
+      }
+    }
   }
 }
 
