@@ -8,11 +8,7 @@
  *   const BACKEND_URL = "http://localhost:3000";
  */
 
-// Baca dari <meta name="api-url"> di HTML, fallback ke localhost untuk dev lokal
-const metaApiUrl = document.querySelector('meta[name="api-url"]');
-const BACKEND_URL = (metaApiUrl && metaApiUrl.getAttribute('content'))
-  ? metaApiUrl.getAttribute('content').replace(/\/$/, '') // hapus trailing slash
-  : "http://localhost:3000";
+const BACKEND_URL = "https://sublime-laughter-production.up.railway.app";
 
 const DEFAULT_HEADERS = {
   "Content-Type": "application/json",
