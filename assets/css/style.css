@@ -8,6 +8,7 @@
 
 * {
     -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
 }
 
 html, body {
@@ -16,6 +17,7 @@ html, body {
 
 body {
     font-family: 'Inter', sans-serif;
+    min-height: 100dvh; /* pastikan body selalu penuh & bisa scroll kalau konten lebih tinggi */
 }
 
 @keyframes float {
@@ -28,27 +30,63 @@ body {
 .custom-scroll::-webkit-scrollbar-track { background: transparent; }
 .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 119, 60, 0.4); border-radius: 10px; }
 
-/* --- Perbaikan Mobile --- */
+/* ==========================================================
+   MOBILE (< 768px)
+   ========================================================== */
 
 /* Gunakan dvh agar tinggi tidak "loncat" saat address bar HP muncul/hilang */
-.min-h-\[90vh\] {
-    min-height: 90vh;
-    min-height: 90dvh;
+.min-h-\[100dvh\] {
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
-/* Safe area untuk HP dengan notch/dynamic island */
 @media (max-width: 767px) {
-    .min-h-\[90vh\] {
+    /* Safe area untuk HP dengan notch/dynamic island */
+    .min-h-\[100dvh\] {
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
     }
-}
 
-/* Kecilkan blur background di mobile agar tidak berat di HP low-end */
-@media (max-width: 767px) {
+    /* Kecilkan blur background di mobile agar tidak berat di HP low-end */
     .fixed.inset-0.pointer-events-none div[class*="w-\[500px\]"] {
         width: 280px !important;
         height: 280px !important;
         filter: blur(80px) !important;
+    }
+
+    /* Pastikan panel kartu bisa scroll natural mengikuti tinggi konten,
+       tidak dipaksa terpotong oleh viewport */
+    body {
+        align-items: flex-start;
+    }
+}
+
+/* Layar sangat sempit: iPhone SE, Android kecil (<= 380px) */
+@media (max-width: 380px) {
+    .p-4.sm\:p-5 {
+        padding: 0.85rem;
+    }
+    .p-4.sm\:p-8.md\:p-16 {
+        padding: 1rem;
+    }
+    h1.text-2xl {
+        font-size: 1.5rem;
+    }
+}
+
+/* ==========================================================
+   TABLET & DESKTOP (>= 768px)
+   ========================================================== */
+@media (min-width: 768px) {
+    body {
+        align-items: center;
+    }
+}
+
+/* Layar sangat lebar (>= 1440px): batasi agar kartu tidak terlalu melebar
+   dan proporsinya tetap enak dilihat */
+@media (min-width: 1440px) {
+    .max-w-6xl {
+        max-width: 72rem;
     }
 }

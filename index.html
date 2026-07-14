@@ -12,18 +12,18 @@
 </head>
 <body style="background-color: var(--dark);" class="min-h-screen flex items-center justify-center p-0 md:p-6">
 
-    <div class="relative z-10 w-full max-w-6xl flex flex-col md:flex-row backdrop-blur-sm md:rounded-[3rem] md:overflow-hidden shadow-2xl min-h-[90vh] md:min-h-[700px] md:h-[700px]"
+    <div class="relative z-10 w-full max-w-6xl flex flex-col md:flex-row backdrop-blur-sm md:rounded-[3rem] md:overflow-hidden shadow-2xl min-h-[100dvh] md:min-h-[700px] md:h-[700px]"
          style="background: rgba(5,5,3,0.6); border: 1px solid rgba(191,197,107,0.15);">
-        
+
         <!-- Left: Image Panel -->
-        <div class="relative w-full md:w-1/2 h-48 sm:h-64 md:h-auto overflow-hidden group">
+        <div class="relative w-full md:w-1/2 h-64 sm:h-80 md:h-auto overflow-hidden group shrink-0">
             <div class="absolute inset-0 z-10 md:bg-gradient-to-r"
-                 style="background: linear-gradient(to top, var(--dark) 0%, transparent 60%);"></div>
-            
-            <img src="/assets/img/kopi.jpeg" 
-                 alt="Coffee Background" 
+                 style="background: linear-gradient(to top, var(--dark) 0%, transparent 75%);"></div>
+
+            <img src="/assets/img/kopi.jpeg"
+                 alt="Coffee Background"
                  class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            
+
             <!-- Overlay tint -->
             <div class="absolute inset-0 z-[5]" style="background: rgba(99,119,60,0.15);"></div>
 
@@ -33,7 +33,7 @@
                          style="background-color: var(--forest);">
                         <img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 40px; height: 40px; object-fit: contain;" class="sm:w-[50px] sm:h-[50px]">
                     </div>
-                    <h1 class="text-3xl sm:text-4xl md:text-6xl font-black leading-none mb-2"
+                    <h1 class="text-2xl sm:text-4xl md:text-6xl font-black leading-none mb-2"
                         style="color: var(--cream);">
                         BERKESAN<br><span style="color: var(--lime);">COFFEE</span>
                     </h1>
@@ -45,10 +45,10 @@
         </div>
 
         <!-- Right: Menu Panel -->
-        <div class="w-full md:w-1/2 flex flex-col p-5 sm:p-8 md:p-16 custom-scroll md:overflow-y-auto"
+        <div class="w-full md:w-1/2 flex flex-col p-4 sm:p-8 md:p-16 custom-scroll md:overflow-y-auto flex-1"
              style="background: rgba(5,5,3,0.45);">
-            
-            <div class="flex justify-between items-center mb-6 md:mb-10">
+
+            <div class="flex justify-between items-center mb-5 md:mb-10">
                 <span class="font-bold tracking-widest text-xs uppercase italic" style="color: var(--lime);">Experience the taste</span>
                 <div class="text-xs px-3 py-1 rounded-full"
                      style="color: rgba(191,197,107,0.6); background: rgba(99,119,60,0.1); border: 1px solid rgba(191,197,107,0.15);">
@@ -57,7 +57,7 @@
             </div>
 
             <div class="space-y-3 md:space-y-4">
-                
+
                 <!-- Order Now -->
                 <a href="/order" class="group flex items-center p-4 sm:p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
                    style="background: rgba(131,101,39,0.12); border: 1px solid rgba(131,101,39,0.25);"
@@ -125,8 +125,8 @@
             </div>
 
             <!-- Contact -->
-            <a href="https://wa.me/6287885190765">
-            <div class="mt-8 md:mt-auto pt-6 md:pt-10 grid grid-cols-1 gap-4">
+            <a href="https://wa.me/6287885190765" class="block">
+            <div class="mt-6 md:mt-auto pt-5 md:pt-10 pb-2 grid grid-cols-1 gap-4">
                 <div class="flex items-center gap-3 group">
                     <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                          style="background: rgba(99,119,60,0.15); color: var(--lime); border: 1px solid rgba(99,119,60,0.3);">
