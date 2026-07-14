@@ -41,12 +41,20 @@ body {
 }
 .reveal-stagger.visible > * {
   animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-fill-mode: forwards;
 }
 .reveal-stagger.visible > *:nth-child(1) { animation-delay: 0.05s; }
 .reveal-stagger.visible > *:nth-child(2) { animation-delay: 0.15s; }
 .reveal-stagger.visible > *:nth-child(3) { animation-delay: 0.25s; }
 .reveal-stagger.visible > *:nth-child(4) { animation-delay: 0.35s; }
 .reveal-stagger.visible > *:nth-child(5) { animation-delay: 0.45s; }
+
+/* Setelah animasi selesai, pastikan opacity tetap 1 */
+.reveal-stagger.visible > *.anim-done {
+  opacity: 1;
+  transform: translateY(0);
+  animation: none;
+}
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(30px); }
@@ -323,17 +331,15 @@ body {
   to { transform: scale(3.2); opacity: 0; }
 }
 
-/* Tap bounce (pengganti tilt 3D) */
+/* Tap bounce (pengganti tilt 3D) — pakai transition bukan animation
+   supaya tidak reset opacity dari reveal-stagger */
 .is-touch .tilt-card {
   transform-origin: center;
+  transform-style: flat; /* nonaktifkan preserve-3d di touch device */
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
-.is-touch .tilt-card.tap-active {
-  animation: cardTapBounce 0.35s ease;
-}
-@keyframes cardTapBounce {
-  0%   { transform: scale(1); }
-  40%  { transform: scale(0.97); }
-  100% { transform: scale(1); }
+.is-touch .tilt-card:active {
+  transform: scale(0.97);
 }
 
 /* Float lebih halus di mobile */

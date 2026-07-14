@@ -336,6 +336,18 @@
       }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
       revealEls.forEach(el => io.observe(el));
 
+      // Setelah animasi fadeUp selesai, tandai dengan anim-done
+      // agar opacity tetap 1 dan tidak bisa di-reset oleh animasi lain
+      document.querySelectorAll('.reveal-stagger').forEach(stagger => {
+        stagger.querySelectorAll(':scope > *').forEach(child => {
+          child.addEventListener('animationend', (e) => {
+            if (e.animationName === 'fadeUp') {
+              child.classList.add('anim-done');
+            }
+          });
+        });
+      });
+
       // Trigger saat klik anchor (jump langsung ke section)
       document.querySelectorAll('a[href^="#"]').forEach(a => {
         a.addEventListener('click', () => setTimeout(triggerVisible, 100));
@@ -401,15 +413,6 @@
             ripple.style.cssText = `width:${size}px;height:${size}px;left:${touch.clientX - rect.left - size / 2}px;top:${touch.clientY - rect.top - size / 2}px`;
             btn.appendChild(ripple);
             setTimeout(() => ripple.remove(), 600);
-          }, { passive: true });
-        });
-
-        // Tap bounce pada card (mobile)
-        document.querySelectorAll('.tilt-card').forEach(card => {
-          card.addEventListener('touchstart', () => {
-            card.classList.remove('tap-active');
-            void card.offsetWidth;
-            card.classList.add('tap-active');
           }, { passive: true });
         });
 
