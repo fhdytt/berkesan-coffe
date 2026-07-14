@@ -1,6 +1,4 @@
-// API_URL dibaca dari api.config.js yang di-load sebelum file ini
-// - Production : dari <meta name="api-url"> di login.html
-// - Lokal dev  : otomatis fallback ke http://localhost:3000
+// Halaman login — autentikasi Admin & Kasir dengan JWT
 
 // Generate CAPTCHA saat halaman load
 window.addEventListener('DOMContentLoaded', function() {

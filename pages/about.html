@@ -16,30 +16,23 @@
 
     <!-- Background Decoration -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
-      <div
-        class="parallax-blob absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-30 bg-[#bfc56b]"
-      ></div>
-      <div
-        class="parallax-blob absolute bottom-0 right-0 w-[30rem] h-[30rem] rounded-full blur-3xl opacity-20 bg-[#836527]"
-      ></div>
-      <span class="bean-particle" style="top:12%; left:18%;">🫘</span>
-      <span class="bean-particle" style="top:65%; left:82%; animation-delay:2.5s;">🫘</span>
-      <span class="bean-particle" style="top:38%; left:55%; animation-delay:5s;">🫘</span>
-      <span class="bean-particle" style="top:80%; left:30%; animation-delay:1.2s;">🫘</span>
+      <div class="parallax-blob absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-30 bg-[#bfc56b]"></div>
+      <div class="parallax-blob absolute bottom-0 right-0 w-[30rem] h-[30rem] rounded-full blur-3xl opacity-20 bg-[#836527]"></div>
+      <span class="bean-particle hidden sm:block" style="top:12%; left:18%;">🫘</span>
+      <span class="bean-particle hidden sm:block" style="top:65%; left:82%; animation-delay:2.5s;">🫘</span>
+      <span class="bean-particle hidden sm:block" style="top:38%; left:55%; animation-delay:5s;">🫘</span>
+      <span class="bean-particle hidden sm:block" style="top:80%; left:30%; animation-delay:1.2s;">🫘</span>
     </div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-5 lg:px-10">
+    <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-10">
+
       <!-- Navbar -->
-      <nav
-        class="flex items-center justify-between py-6 border-b border-[#63773c]/20"
-      >
+      <nav class="flex items-center justify-between py-5 sm:py-6 border-b border-[#63773c]/20">
         <div>
-          <h1
-            class="font-display text-2xl md:text-3xl font-bold text-[#050503]"
-          >
+          <h1 class="font-display text-xl sm:text-2xl md:text-3xl font-bold text-[#050503]">
             berkesan coffee
           </h1>
-          <p class="text-sm text-[#63773c]">— tempat pulang & cerita —</p>
+          <p class="text-xs sm:text-sm text-[#63773c]">— tempat pulang & cerita —</p>
         </div>
 
         <div class="hidden md:flex items-center gap-8 text-sm font-medium">
@@ -49,71 +42,63 @@
         </div>
 
         <!-- Hamburger Button (mobile) -->
-        <button id="menu-toggle" class="md:hidden text-[#63773c] text-2xl focus:outline-none">
+        <button id="menu-toggle" class="md:hidden text-[#63773c] text-xl p-2 min-w-[44px] min-h-[44px] flex items-center justify-center focus:outline-none" aria-label="Buka menu">
           <i class="fas fa-bars"></i>
         </button>
       </nav>
 
       <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden flex-col gap-4 py-4 border-b border-[#63773c]/20 text-sm font-medium">
-        <a href="#" class="text-[#836527] hover:text-[#63773c] transition">Tentang</a>
-        <a href="#signature" class="text-[#63773c] hover:text-[#836527] transition" id="mobile-signature">Signature</a>
-        <a href="/order" class="bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-5 py-2 rounded-full transition shadow-lg text-center">Pesan</a>
+      <div id="mobile-menu" class="hidden flex-col gap-1 py-3 border-b border-[#63773c]/20 text-sm font-medium">
+        <a href="#" class="text-[#836527] hover:text-[#63773c] transition px-2 py-3">Tentang</a>
+        <a href="#signature" id="mobile-signature" class="text-[#63773c] hover:text-[#836527] transition px-2 py-3">Signature</a>
+        <a href="/order" class="mt-1 bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-5 py-3 rounded-full transition shadow-lg text-center block">Pesan</a>
       </div>
 
       <!-- HERO -->
-      <section class="reveal py-20 lg:py-28 text-center">
-        <div
-          class="floating inline-flex items-center justify-center w-28 h-28 rounded-full shadow-2xl mb-8"
-        >
-          <div class="sb-ico"><img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 98px; height: 98px; object-fit: contain;"></div>
+      <section class="reveal py-14 sm:py-20 lg:py-28 text-center">
+        <div class="floating inline-flex items-center justify-center w-20 h-20 sm:w-28 sm:h-28 rounded-full shadow-2xl mb-6 sm:mb-8">
+          <div class="sb-ico">
+            <img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" class="w-16 h-16 sm:w-24 sm:h-24 object-contain">
+          </div>
         </div>
 
-        <h1
-          class="shimmer-text font-display text-5xl md:text-7xl font-bold leading-tight"
-        >
+        <h1 class="shimmer-text font-display text-4xl sm:text-5xl md:text-7xl font-bold leading-tight">
           tentang ruang & rasa
         </h1>
 
-        <p
-          class="split-words mt-6 max-w-3xl mx-auto text-lg md:text-xl text-[#63773c] leading-relaxed"
-        >
-          “lebih dari kedai kopi, inilah rumah untuk berbagi cerita”
+        <p class="split-words mt-4 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-[#63773c] leading-relaxed px-2">
+          "lebih dari kedai kopi, inilah rumah untuk berbagi cerita"
         </p>
       </section>
 
       <!-- STORY -->
-      <section class="grid lg:grid-cols-2 gap-10 items-center mb-24">
+      <section class="grid lg:grid-cols-2 gap-8 lg:gap-10 items-center mb-16 sm:mb-24">
         <!-- Left -->
         <div class="reveal">
-          <div
-            class="inline-flex items-center gap-2 bg-[#bfc56b]/40 border border-[#63773c]/20 px-5 py-2 rounded-full text-sm font-semibold text-[#63773c] mb-6"
-          >
+          <div class="inline-flex items-center gap-2 bg-[#bfc56b]/40 border border-[#63773c]/20 px-4 py-2 rounded-full text-xs sm:text-sm font-semibold text-[#63773c] mb-5">
             <i class="fas fa-seedling"></i>
             Berawal dari mimpi tahun 2020
           </div>
 
-          <h2 class="font-display text-4xl font-bold mb-6 text-[#050503]">
+          <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 sm:mb-6 text-[#050503]">
             Setiap cangkir memiliki cerita
           </h2>
 
-          <div class="space-y-5 text-[#63773c] leading-relaxed">
+          <div class="space-y-4 text-[#63773c] leading-relaxed text-sm sm:text-base">
             <p>
               Berkesan Coffee hadir dengan satu tujuan utama: menciptakan ruang
               yang nyaman, hangat, dan penuh arti untuk siapa pun yang datang.
             </p>
-
             <p>
               Kami percaya kopi bukan hanya tentang rasa, tetapi tentang momen —
               tentang tawa yang tercipta, percakapan yang tumbuh, dan ketenangan
               yang dirasakan.
             </p>
 
-            <div class="quote-glow bg-[#63773c] text-[#f7facc] p-6 rounded-3xl shadow-xl">
-              <div class="flex items-start gap-4">
-                <i class="fas fa-quote-left text-2xl mt-1"></i>
-
-                <p class="italic leading-relaxed">
+            <div class="quote-glow bg-[#63773c] text-[#f7facc] p-5 sm:p-6 rounded-2xl sm:rounded-3xl shadow-xl">
+              <div class="flex items-start gap-3 sm:gap-4">
+                <i class="fas fa-quote-left text-lg sm:text-2xl mt-1 shrink-0"></i>
+                <p class="italic leading-relaxed text-sm sm:text-base">
                   Setiap racikan dibuat dengan perhatian dan ketulusan, agar
                   setiap tegukan meninggalkan kesan mendalam.
                 </p>
@@ -129,197 +114,129 @@
 
         <!-- Right -->
         <div class="reveal">
-          <div
-            class="relative bg-[#836527] rounded-[2rem] p-10 overflow-hidden shadow-2xl"
-          >
-            <div
-              class="absolute top-0 right-0 w-52 h-52 bg-[#bfc56b]/20 rounded-full blur-3xl"
-            ></div>
+          <div class="story-card relative bg-[#836527] rounded-3xl p-7 sm:p-10 overflow-hidden shadow-2xl">
+            <div class="absolute top-0 right-0 w-52 h-52 bg-[#bfc56b]/20 rounded-full blur-3xl"></div>
 
             <div class="relative z-10 text-center">
-              <div class="cup-bounce steam-wrap text-8xl mb-6">
+              <div class="cup-bounce steam-wrap text-7xl sm:text-8xl mb-4 sm:mb-6">
                 ☕
                 <span class="steam steam-1"></span>
                 <span class="steam steam-2"></span>
                 <span class="steam steam-3"></span>
               </div>
 
-              <h3 class="font-display text-3xl font-bold text-[#f7facc] mb-4">
+              <h3 class="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-[#f7facc] mb-3 sm:mb-4">
                 Connecting worlds through Coffee.
               </h3>
 
-              <p class="text-[#f7facc]/80 leading-relaxed">
+              <p class="text-[#f7facc]/80 leading-relaxed text-sm sm:text-base">
                 Dari satu cangkir, kita merajut dunia yang lebih hangat.
               </p>
 
-              <button
-                class="magnetic-btn mt-8 bg-[#f7facc] text-[#836527] hover:bg-[#bfc56b] px-6 py-3 rounded-full font-semibold transition shadow-lg"
-              >
-                <a href="/order" class="inline-flex items-center">
-                  <i class="fas fa-heart mr-2"></i>
-                  Rasakan Ceritanya
-                </a>
-              </button>
+              <a href="/order" class="magnetic-btn inline-flex items-center justify-center mt-6 sm:mt-8 bg-[#f7facc] text-[#836527] hover:bg-[#bfc56b] px-6 py-3 rounded-full font-semibold transition shadow-lg text-sm sm:text-base min-h-[48px]">
+                <i class="fas fa-heart mr-2"></i>
+                Rasakan Ceritanya
+              </a>
             </div>
           </div>
         </div>
       </section>
 
       <!-- VALUES -->
-      <section class="mb-24">
-        <div class="reveal text-center mb-14">
-          <h2 class="font-display text-5xl font-bold text-[#050503] mb-4">
+      <section class="mb-16 sm:mb-24">
+        <div class="reveal text-center mb-10 sm:mb-14">
+          <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#050503] mb-3 sm:mb-4">
             inti dari setiap cangkir
           </h2>
-
-          <p class="text-[#63773c]">
+          <p class="text-[#63773c] text-sm sm:text-base">
             Filosofi yang selalu kami jaga dalam setiap sajian.
           </p>
         </div>
 
-        <div class="reveal reveal-stagger grid md:grid-cols-3 gap-8">
-          <!-- CARD -->
-          <div
-            class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl"
-          >
-            <div
-              class="w-16 h-16 rounded-2xl bg-[#63773c] flex items-center justify-center mb-6"
-            >
-              <i class="fas fa-hand-holding-heart text-2xl text-[#f7facc]"></i>
+        <div class="reveal reveal-stagger grid sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+          <div class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 shadow-xl">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-[#63773c] flex items-center justify-center mb-4 sm:mb-6">
+              <i class="fas fa-hand-holding-heart text-xl sm:text-2xl text-[#f7facc]"></i>
             </div>
-
-            <h3 class="text-2xl font-bold mb-4 text-[#050503]">Ketulusan</h3>
-
-            <p class="text-[#63773c] leading-relaxed">
-              Setiap sajian dibuat dengan perhatian, kehangatan, dan rasa hormat
-              untuk pelanggan.
+            <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-[#050503]">Ketulusan</h3>
+            <p class="text-[#63773c] leading-relaxed text-sm sm:text-base">
+              Setiap sajian dibuat dengan perhatian, kehangatan, dan rasa hormat untuk pelanggan.
             </p>
           </div>
 
-          <!-- CARD -->
-          <div
-            class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl"
-          >
-            <div
-              class="w-16 h-16 rounded-2xl bg-[#836527] flex items-center justify-center mb-6"
-            >
-              <i class="fas fa-users text-2xl text-[#f7facc]"></i>
+          <div class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 shadow-xl">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-[#836527] flex items-center justify-center mb-4 sm:mb-6">
+              <i class="fas fa-users text-xl sm:text-2xl text-[#f7facc]"></i>
             </div>
-
-            <h3 class="text-2xl font-bold mb-4 text-[#050503]">Kebersamaan</h3>
-
-            <p class="text-[#63773c] leading-relaxed">
-              Ruang nyaman untuk berbagi cerita, canda, maupun menikmati
-              keheningan.
+            <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-[#050503]">Kebersamaan</h3>
+            <p class="text-[#63773c] leading-relaxed text-sm sm:text-base">
+              Ruang nyaman untuk berbagi cerita, canda, maupun menikmati keheningan.
             </p>
           </div>
 
-          <!-- CARD -->
-          <div
-            class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-[2rem] p-8 shadow-xl"
-          >
-            <div
-              class="w-16 h-16 rounded-2xl bg-[#bfc56b] flex items-center justify-center mb-6"
-            >
-              <i class="fas fa-seedling text-2xl text-[#050503]"></i>
+          <div class="tilt-card bg-white/60 backdrop-blur-xl border border-[#63773c]/10 rounded-2xl sm:rounded-[2rem] p-6 sm:p-8 shadow-xl sm:col-span-2 md:col-span-1">
+            <div class="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-[#bfc56b] flex items-center justify-center mb-4 sm:mb-6">
+              <i class="fas fa-seedling text-xl sm:text-2xl text-[#050503]"></i>
             </div>
-
-            <h3 class="text-2xl font-bold mb-4 text-[#050503]">Kesan Abadi</h3>
-
-            <p class="text-[#63773c] leading-relaxed">
-              Kami ingin setiap kunjungan meninggalkan kenangan yang terus hidup
-              di ingatan.
+            <h3 class="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-[#050503]">Kesan Abadi</h3>
+            <p class="text-[#63773c] leading-relaxed text-sm sm:text-base">
+              Kami ingin setiap kunjungan meninggalkan kenangan yang terus hidup di ingatan.
             </p>
           </div>
         </div>
       </section>
 
       <!-- SIGNATURE -->
-      <section id="signature" class="reveal mb-24">
-        <div
-          class="curtain-reveal bg-[#050503] rounded-[3rem] overflow-hidden p-10 md:p-14 shadow-2xl"
-        >
-          <div class="text-center mb-14">
-            <div
-              class="inline-flex items-center gap-2 bg-[#63773c]/30 border border-[#63773c]/30 px-5 py-2 rounded-full text-[#bfc56b] text-sm mb-5"
-            >
+      <section id="signature" class="reveal mb-16 sm:mb-24">
+        <div class="curtain-reveal bg-[#050503] rounded-3xl sm:rounded-[3rem] overflow-hidden p-6 sm:p-10 md:p-14 shadow-2xl">
+          <div class="text-center mb-10 sm:mb-14">
+            <div class="inline-flex items-center gap-2 bg-[#63773c]/30 border border-[#63773c]/30 px-4 py-2 rounded-full text-[#bfc56b] text-xs sm:text-sm mb-4 sm:mb-5">
               <i class="fas fa-star"></i>
               Signature Menu
             </div>
-
-            <h2 class="font-display text-5xl font-bold text-[#f7facc]">
+            <h2 class="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-[#f7facc]">
               kenangan dalam setiap nama
             </h2>
           </div>
 
-          <div class="reveal-stagger flex flex-wrap justify-center gap-6">
-            <!-- ITEM -->
-            <div
-              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
-            >
-              <div class="text-5xl mb-5">🌿</div>
-
-              <h3 class="text-2xl font-bold text-[#f7facc] mb-3">
-                Seasonal Item
-              </h3>
-
-              <p class="text-[#bfc56b] leading-relaxed text-sm">
-                Cerita musiman yang selalu berubah, namun tetap meninggalkan
-                kesan.
+          <div class="reveal-stagger grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-2xl sm:rounded-3xl p-5 sm:p-6 hover:bg-[#63773c]/30 transition">
+              <div class="text-4xl sm:text-5xl mb-4 sm:mb-5">🌿</div>
+              <h3 class="text-lg sm:text-2xl font-bold text-[#f7facc] mb-2 sm:mb-3">Seasonal Item</h3>
+              <p class="text-[#bfc56b] leading-relaxed text-xs sm:text-sm">
+                Cerita musiman yang selalu berubah, namun tetap meninggalkan kesan.
               </p>
             </div>
 
-            <!-- ITEM -->
-            <div
-              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
-            >
-              <div class="text-5xl mb-5">⏳</div>
-
-              <h3 class="text-2xl font-bold text-[#f7facc] mb-3">Waktu</h3>
-
-              <p class="text-[#bfc56b] leading-relaxed text-sm">
+            <div class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-2xl sm:rounded-3xl p-5 sm:p-6 hover:bg-[#63773c]/30 transition">
+              <div class="text-4xl sm:text-5xl mb-4 sm:mb-5">⏳</div>
+              <h3 class="text-lg sm:text-2xl font-bold text-[#f7facc] mb-2 sm:mb-3">Waktu</h3>
+              <p class="text-[#bfc56b] leading-relaxed text-xs sm:text-sm">
                 Tentang melambat sejenak, menikmati waktu tanpa terburu-buru.
               </p>
             </div>
 
-            <!-- ITEM -->
-            <div
-              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
-            >
-              <div class="text-5xl mb-5">🤝</div>
-
-              <h3 class="text-2xl font-bold text-[#f7facc] mb-3">Jumpa</h3>
-
-              <p class="text-[#bfc56b] leading-relaxed text-sm">
+            <div class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-2xl sm:rounded-3xl p-5 sm:p-6 hover:bg-[#63773c]/30 transition">
+              <div class="text-4xl sm:text-5xl mb-4 sm:mb-5">🤝</div>
+              <h3 class="text-lg sm:text-2xl font-bold text-[#f7facc] mb-2 sm:mb-3">Jumpa</h3>
+              <p class="text-[#bfc56b] leading-relaxed text-xs sm:text-sm">
                 Merayakan setiap pertemuan dan cerita yang tercipta.
               </p>
             </div>
 
-            <!-- ITEM -->
-            <div
-              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
-            >
-              <div class="text-5xl mb-5">🌙</div>
-
-              <h3 class="text-2xl font-bold text-[#f7facc] mb-3">Dia</h3>
-
-              <p class="text-[#bfc56b] leading-relaxed text-sm">
+            <div class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-2xl sm:rounded-3xl p-5 sm:p-6 hover:bg-[#63773c]/30 transition">
+              <div class="text-4xl sm:text-5xl mb-4 sm:mb-5">🌙</div>
+              <h3 class="text-lg sm:text-2xl font-bold text-[#f7facc] mb-2 sm:mb-3">Dia</h3>
+              <p class="text-[#bfc56b] leading-relaxed text-xs sm:text-sm">
                 Nostalgia yang lembut, hangat, dan selalu dikenang.
               </p>
             </div>
 
-            <!-- ITEM -->
-            <div
-              class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-3xl p-6 hover:bg-[#63773c]/30 transition w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(25%-1.125rem)]"
-            >
-              <div class="text-5xl mb-5">🍓</div>
-
-              <h3 class="text-2xl font-bold text-[#f7facc] mb-3">
-                Creamy Berries
-              </h3>
-
-              <p class="text-[#bfc56b] leading-relaxed text-sm">
-                Lembut, manis dan berkesan seperti kenangan
+            <div class="tilt-card bg-[#63773c]/20 border border-[#63773c]/20 rounded-2xl sm:rounded-3xl p-5 sm:p-6 hover:bg-[#63773c]/30 transition sm:col-span-2 lg:col-span-1">
+              <div class="text-4xl sm:text-5xl mb-4 sm:mb-5">🍓</div>
+              <h3 class="text-lg sm:text-2xl font-bold text-[#f7facc] mb-2 sm:mb-3">Creamy Berries</h3>
+              <p class="text-[#bfc56b] leading-relaxed text-xs sm:text-sm">
+                Lembut, manis dan berkesan seperti kenangan.
               </p>
             </div>
           </div>
@@ -327,62 +244,49 @@
       </section>
 
       <!-- CONTACT -->
-      <section class="reveal mb-24">
-        <div
-          class="bg-[#bfc56b]/20 border border-[#63773c]/10 rounded-[2.5rem] p-10 text-center shadow-xl"
-        >
-          <div
-            class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-[#63773c] mb-6"
-          >
-            <i class="fas fa-store text-3xl text-[#f7facc]"></i>
+      <section class="reveal mb-16 sm:mb-24">
+        <div class="contact-card bg-[#bfc56b]/20 border border-[#63773c]/10 rounded-3xl sm:rounded-[2.5rem] p-7 sm:p-10 text-center shadow-xl">
+          <div class="inline-flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-[#63773c] mb-5 sm:mb-6">
+            <i class="fas fa-store text-2xl sm:text-3xl text-[#f7facc]"></i>
           </div>
 
-          <h2 class="font-display text-4xl font-bold text-[#050503] mb-4">
+          <h2 class="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-[#050503] mb-3 sm:mb-4">
             selalu ada ruang untuk pulang
           </h2>
 
-          <p class="text-[#63773c] text-lg mb-8">
+          <p class="text-[#63773c] text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 leading-relaxed">
             Dago Eat Park, Villa Dago Pamulang <br />
             Setiap hari 09.00 – 23.00 <br />
             @ber.ke.san
           </p>
 
-          <div class="flex flex-wrap justify-center gap-4">
-            <button
-              class="magnetic-btn bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-7 py-3 rounded-full font-semibold transition shadow-lg"
-            >
-              <a href="https://wa.me/6287885190765" >
-                <i class="fab fa-whatsapp mr-2"></i>
-                Hubungi Kami
-              </a>
-            </button>
-
-            <button
-              class="magnetic-btn border border-[#63773c] text-[#63773c] hover:bg-[#63773c] hover:text-[#f7facc] px-7 py-3 rounded-full font-semibold transition"
-            >
-              <a href="https://maps.app.goo.gl/H3Qmq6hthP3yPEUf6">
-                <i class="fas fa-location-dot mr-2"></i>
-                Lihat Lokasi
-              </a>
-            </button>
+          <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+            <a href="https://wa.me/6287885190765" class="magnetic-btn inline-flex items-center justify-center bg-[#63773c] hover:bg-[#836527] text-[#f7facc] px-6 py-3 rounded-full font-semibold transition shadow-lg text-sm sm:text-base min-h-[48px]">
+              <i class="fab fa-whatsapp mr-2"></i>
+              Hubungi Kami
+            </a>
+            <a href="https://maps.app.goo.gl/H3Qmq6hthP3yPEUf6" class="magnetic-btn inline-flex items-center justify-center border border-[#63773c] text-[#63773c] hover:bg-[#63773c] hover:text-[#f7facc] px-6 py-3 rounded-full font-semibold transition text-sm sm:text-base min-h-[48px]">
+              <i class="fas fa-location-dot mr-2"></i>
+              Lihat Lokasi
+            </a>
           </div>
         </div>
       </section>
     </div>
 
     <!-- FOOTER -->
-    <footer class="border-t border-[#63773c]/10 py-10 text-center px-6">
-      <p class="text-[#63773c]">
-        © 2025 Berkesan Coffee — ruang yang penuh arti, dari mimpi 2020 hingga
-        kini.
+    <footer class="border-t border-[#63773c]/10 py-8 sm:py-10 text-center px-4 sm:px-6">
+      <p class="text-[#63773c] text-sm sm:text-base">
+        © 2025 Berkesan Coffee — ruang yang penuh arti, dari mimpi 2020 hingga kini.
       </p>
-
-      <p class="mt-3 text-[#836527] italic">
+      <p class="mt-2 sm:mt-3 text-[#836527] italic text-xs sm:text-sm">
         <i class="fas fa-coffee mr-2"></i>
         "Kopi yang dikenang, karena cerita yang terbagi"
       </p>
     </footer>
+
     <script>
+      // Mobile menu toggle
       const toggle = document.getElementById('menu-toggle');
       const mobileMenu = document.getElementById('mobile-menu');
       toggle.addEventListener('click', () => {
@@ -394,7 +298,7 @@
         mobileMenu.classList.remove('flex');
       });
 
-      // ===== Scroll progress bar =====
+      // Scroll progress bar
       const progressBar = document.querySelector('.scroll-progress');
       window.addEventListener('scroll', () => {
         const scrollTop = window.scrollY;
@@ -403,7 +307,7 @@
         progressBar.style.width = pct + '%';
       });
 
-      // ===== Split kata untuk animasi reveal per kata =====
+      // Split kata untuk animasi reveal per kata
       document.querySelectorAll('.split-words').forEach(el => {
         const words = el.textContent.trim().split(/\s+/);
         el.innerHTML = words
@@ -411,7 +315,7 @@
           .join(' ');
       });
 
-      // ===== Scroll reveal =====
+      // Scroll reveal
       const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -420,23 +324,17 @@
             io.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.15 });
+      }, { threshold: 0.1 });
       revealEls.forEach(el => io.observe(el));
 
-      // =========================================================
-      // DETEKSI TOUCH DEVICE
-      // Menambahkan class "is-touch" ke <html> agar animasi mobile
-      // khusus (ripple, tap-bounce, float halus) aktif, dan supaya
-      // efek berbasis mouse (parallax blob, tilt 3D) tidak dipaksakan
-      // berjalan di perangkat sentuh.
-      // =========================================================
+      // Deteksi touch device
       const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
       if (isTouchDevice) {
         document.documentElement.classList.add('is-touch');
       }
 
       if (!isTouchDevice) {
-        // ===== Parallax blob mengikuti mouse (desktop only) =====
+        // Parallax blob (desktop only)
         const blobs = document.querySelectorAll('.parallax-blob');
         document.addEventListener('mousemove', (e) => {
           const x = (e.clientX / window.innerWidth - 0.5) * 40;
@@ -447,24 +345,22 @@
           });
         });
 
-        // ===== Tilt 3D di card (desktop only) =====
+        // Tilt 3D di card (desktop only)
         document.querySelectorAll('.tilt-card').forEach(card => {
           card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -6;
-            const rotateY = ((x - centerX) / centerX) * 6;
+            const rotateX = ((y - rect.height / 2) / rect.height) * -6;
+            const rotateY = ((x - rect.width / 2) / rect.width) * 6;
             card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
           });
           card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0)';
+            card.style.transform = '';
           });
         });
 
-        // ===== Magnetic button (desktop only) =====
+        // Magnetic button (desktop only)
         document.querySelectorAll('.magnetic-btn').forEach(btn => {
           btn.addEventListener('mousemove', (e) => {
             const rect = btn.getBoundingClientRect();
@@ -473,15 +369,11 @@
             btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
           });
           btn.addEventListener('mouseleave', () => {
-            btn.style.transform = 'translate(0, 0)';
+            btn.style.transform = '';
           });
         });
       } else {
-        // =========================================================
-        // ANIMASI KHUSUS MOBILE / TOUCH
-        // =========================================================
-
-        // --- Tap ripple pada tombol (pengganti efek magnetic) ---
+        // Tap ripple pada tombol (mobile)
         document.querySelectorAll('.magnetic-btn').forEach(btn => {
           btn.addEventListener('touchstart', (e) => {
             const rect = btn.getBoundingClientRect();
@@ -489,41 +381,33 @@
             const ripple = document.createElement('span');
             const size = Math.max(rect.width, rect.height);
             ripple.className = 'tap-ripple';
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = (touch.clientX - rect.left - size / 2) + 'px';
-            ripple.style.top = (touch.clientY - rect.top - size / 2) + 'px';
+            ripple.style.cssText = `width:${size}px;height:${size}px;left:${touch.clientX - rect.left - size / 2}px;top:${touch.clientY - rect.top - size / 2}px`;
             btn.appendChild(ripple);
             setTimeout(() => ripple.remove(), 600);
           }, { passive: true });
         });
 
-        // --- Tap bounce pada card (pengganti tilt 3D) ---
+        // Tap bounce pada card (mobile)
         document.querySelectorAll('.tilt-card').forEach(card => {
           card.addEventListener('touchstart', () => {
             card.classList.remove('tap-active');
-            // force reflow supaya animasi bisa diulang
             void card.offsetWidth;
             card.classList.add('tap-active');
           }, { passive: true });
         });
 
-        // --- Parallax blob mengikuti kemiringan perangkat (gyroscope), jika tersedia ---
+        // Gyroscope parallax (jika tersedia)
         const blobsTouch = document.querySelectorAll('.parallax-blob');
         if (window.DeviceOrientationEvent && blobsTouch.length) {
-          let orientationEnabled = false;
-          const handleOrientation = (e) => {
-            const x = (e.gamma || 0) * 1.2; // kiri-kanan
-            const y = (e.beta || 0) * 0.6;  // depan-belakang
-            blobsTouch.forEach((blob, i) => {
-              const factor = i % 2 === 0 ? 1 : -1;
-              blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
-            });
-          };
-          // iOS 13+ butuh izin eksplisit; kita hanya pasang listener
-          // secara pasif tanpa memaksa dialog izin muncul otomatis.
           if (typeof DeviceOrientationEvent.requestPermission !== 'function') {
-            window.addEventListener('deviceorientation', handleOrientation);
-            orientationEnabled = true;
+            window.addEventListener('deviceorientation', (e) => {
+              const x = (e.gamma || 0) * 1.2;
+              const y = (e.beta || 0) * 0.6;
+              blobsTouch.forEach((blob, i) => {
+                const factor = i % 2 === 0 ? 1 : -1;
+                blob.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+              });
+            });
           }
         }
       }

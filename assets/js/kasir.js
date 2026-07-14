@@ -9,11 +9,8 @@
   }
 })();
 
-// API_URL dibaca dari api.config.js yang di-load sebelum file ini
-// - Production : dari <meta name="api-url"> di kasir/index.html
-// - Lokal dev  : otomatis fallback ke http://localhost:3000
+// Halaman kasir — kelola antrean, konfirmasi pembayaran & cetak struk
 const API = `${window.API_URL}/api/kasir`;
-console.log("Kasir JS loaded, API:", API);
 
 // ============================================
 // VARIABLES

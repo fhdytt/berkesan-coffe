@@ -10,12 +10,8 @@
   }
 })();
 
-// API_URL dibaca dari api.config.js yang di-load sebelum file ini
-// - Production : dari <meta name="api-url"> di admin/index.html
-// - Lokal dev  : otomatis fallback ke http://localhost:3000
+// Dashboard admin — manajemen menu, kategori, meja, laporan & rekap
 const API_BASE = `${window.API_URL}/api/dashboard`;
-
-console.log("Dashboard Admin loaded, API_BASE:", API_BASE);
 
 // HANYA SATU window.addEventListener
 window.addEventListener("load", () => {

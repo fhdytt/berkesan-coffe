@@ -1,13 +1,4 @@
-/**
- * api.config.js — Konfigurasi URL backend terpusat
- *
- * Ganti nilai BACKEND_URL di bawah dengan URL Railway setelah deploy:
- *   const BACKEND_URL = "https://berkesan-production.up.railway.app";
- *
- * Untuk development lokal, ubah ke:
- *   const BACKEND_URL = "http://localhost:3000";
- */
-
+// Backend API URL — ganti jika URL Railway berubah
 const BACKEND_URL = "https://sublime-laughter-production.up.railway.app";
 
 const DEFAULT_HEADERS = {

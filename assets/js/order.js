@@ -1,10 +1,6 @@
 const rupiah = (v) => "Rp " + (Number(v) || 0).toLocaleString("id-ID");
 
-// API_URL dibaca dari api.config.js yang di-load sebelum file ini
-// - Production : dari <meta name="api-url"> di pages/order.html
-// - Lokal dev  : otomatis fallback ke http://localhost:3000
-console.log("Order page loaded, API_URL:", window.API_URL);
-
+// Halaman order publik — pelanggan memilih menu & checkout via meja
 const params = new URLSearchParams(window.location.search);
 let tableNumber =
   params.get("table") ||

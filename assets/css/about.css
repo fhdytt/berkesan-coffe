@@ -1,3 +1,6 @@
+/* about.css — styling khusus halaman About Berkesan Coffee */
+
+/* ===== Base ===== */
 body {
   font-family: "Inter", sans-serif;
   background: #f7facc;
@@ -8,18 +11,16 @@ body {
   font-family: "Playfair Display", serif;
 }
 
-@keyframes floating {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-.floating {
-  animation: floating 4s ease-in-out infinite;
+/* ===== Scroll Progress Bar ===== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #63773c, #836527, #bfc56b);
+  z-index: 9999;
+  transition: width 0.1s ease-out;
 }
 
 /* ===== Scroll Reveal ===== */
@@ -29,13 +30,12 @@ body {
   transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* stagger anak-anak grid (cards, signature items) */
+/* stagger anak grid saat masuk viewport */
 .reveal-stagger > * {
   opacity: 0;
 }
@@ -49,17 +49,20 @@ body {
 .reveal-stagger.visible > *:nth-child(5) { animation-delay: 0.45s; }
 
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== Gradient shimmer di judul hero ===== */
+/* ===== Hero: floating logo ===== */
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+.floating {
+  animation: floating 4s ease-in-out infinite;
+}
+
+/* ===== Hero: shimmer text ===== */
 .shimmer-text {
   background: linear-gradient(90deg, #050503 0%, #63773c 25%, #836527 50%, #63773c 75%, #050503 100%);
   background-size: 200% auto;
@@ -72,13 +75,170 @@ body {
   to { background-position: -200% center; }
 }
 
-/* ===== Blob parallax (digerakkan lewat JS) ===== */
+/* ===== Hero: reveal kata per kata ===== */
+.word-span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(12px);
+}
+.reveal.visible .word-span {
+  animation: wordIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes wordIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Navbar underline animasi ===== */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 0;
+  background: currentColor;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* ===== Parallax blob (digerakkan via JS) ===== */
 .parallax-blob {
   transition: transform 0.2s ease-out;
   will-change: transform;
 }
 
-/* ===== Tilt 3D di card value & signature ===== */
+/* ===== Biji kopi melayang ===== */
+.bean-particle {
+  position: absolute;
+  font-size: 1.5rem;
+  opacity: 0.25;
+  animation: beanDrift 12s ease-in-out infinite;
+  filter: grayscale(0.3) blur(0.3px);
+}
+@keyframes beanDrift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25%       { transform: translate(15px, -20px) rotate(10deg); }
+  50%       { transform: translate(-10px, 12px) rotate(-8deg); }
+  75%       { transform: translate(10px, 18px) rotate(6deg); }
+}
+
+/* ===== Quote card ===== */
+.quote-glow {
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.96) translateY(14px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible .quote-glow {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition-delay: 0.15s;
+  animation: quoteBreathe 4.5s ease-in-out 0.9s infinite;
+}
+@keyframes quoteBreathe {
+  0%, 100% { box-shadow: 0 0 0 rgba(191, 197, 107, 0); }
+  50%       { box-shadow: 0 0 40px 6px rgba(191, 197, 107, 0.28); }
+}
+
+/* sapuan cahaya sekali saat muncul */
+.quote-glow::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(115deg, transparent 0%, rgba(247, 250, 204, 0.35) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+.reveal.visible .quote-glow::after {
+  animation: lightSweep 1.4s ease-out 0.5s 1;
+}
+@keyframes lightSweep {
+  from { left: -60%; }
+  to   { left: 130%; }
+}
+
+/* ikon kutip */
+.quote-glow i.fa-quote-left {
+  display: inline-block;
+  opacity: 0;
+  transform: rotate(-25deg) scale(0.6);
+}
+.reveal.visible .quote-glow i.fa-quote-left {
+  animation: quoteIconIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+}
+@keyframes quoteIconIn {
+  to { opacity: 0.85; transform: rotate(0deg) scale(1); }
+}
+
+/* teks kutipan */
+.quote-glow p {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.reveal.visible .quote-glow p {
+  animation: quoteTextIn 0.8s ease 0.75s both;
+}
+@keyframes quoteTextIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Cup emoji bounce ===== */
+.cup-bounce {
+  display: inline-block;
+  opacity: 0;
+}
+.reveal.visible .cup-bounce {
+  animation: cupBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+}
+@keyframes cupBounce {
+  0%   { transform: scale(0) rotate(-15deg); opacity: 0; }
+  60%  { transform: scale(1.15) rotate(8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ===== Uap kopi ===== */
+.steam-wrap {
+  position: relative;
+  display: inline-block;
+}
+.steam {
+  position: absolute;
+  top: -6px;
+  width: 6px;
+  height: 20px;
+  background: rgba(247, 250, 204, 0.55);
+  border-radius: 50%;
+  filter: blur(3px);
+  opacity: 0;
+}
+.steam-1 { left: 36%; }
+.steam-2 { left: 50%; }
+.steam-3 { left: 64%; }
+
+.reveal.visible .steam-wrap .steam {
+  animation: steamRise 3.5s ease-in-out infinite;
+}
+.reveal.visible .steam-wrap .steam-1 { animation-delay: 0.9s; }
+.reveal.visible .steam-wrap .steam-2 { animation-delay: 2s; }
+.reveal.visible .steam-wrap .steam-3 { animation-delay: 3.1s; }
+
+@keyframes steamRise {
+  0%   { opacity: 0; transform: translateY(0) scale(1); }
+  25%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-42px) scale(1.7); }
+}
+
+/* ===== Tilt 3D card (desktop) ===== */
 .tilt-card {
   position: relative;
   transform-style: preserve-3d;
@@ -88,8 +248,6 @@ body {
 .tilt-card:hover {
   box-shadow: 0 25px 50px -12px rgba(99, 119, 60, 0.35);
 }
-
-/* glow ring halus saat hover */
 .tilt-card::before {
   content: "";
   position: absolute;
@@ -112,222 +270,7 @@ body {
   will-change: transform;
 }
 
-/* ===== Quote card: elegant reveal + breathing glow + light sweep ===== */
-.quote-glow {
-  position: relative;
-  overflow: hidden;
-  z-index: 0;
-  opacity: 0;
-  transform: scale(0.96) translateY(14px);
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.reveal.visible .quote-glow {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  transition-delay: 0.15s;
-  animation: quoteBreathe 4.5s ease-in-out 0.9s infinite;
-}
-
-@keyframes quoteBreathe {
-  0%, 100% { box-shadow: 0 0 0 rgba(191, 197, 107, 0); }
-  50% { box-shadow: 0 0 40px 6px rgba(191, 197, 107, 0.28); }
-}
-
-/* sapuan cahaya lewat sekali saat kartu muncul */
-.quote-glow::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -60%;
-  width: 40%;
-  height: 100%;
-  background: linear-gradient(
-    115deg,
-    transparent 0%,
-    rgba(247, 250, 204, 0.35) 50%,
-    transparent 100%
-  );
-  transform: skewX(-20deg);
-  pointer-events: none;
-}
-.reveal.visible .quote-glow::after {
-  animation: lightSweep 1.4s ease-out 0.5s 1;
-}
-@keyframes lightSweep {
-  from { left: -60%; }
-  to { left: 130%; }
-}
-
-/* tanda kutip muncul dengan rotasi halus, mendahului teks */
-.quote-glow i.fa-quote-left {
-  display: inline-block;
-  opacity: 0;
-  transform: rotate(-25deg) scale(0.6);
-}
-.reveal.visible .quote-glow i.fa-quote-left {
-  animation: quoteIconIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
-}
-@keyframes quoteIconIn {
-  to { opacity: 0.85; transform: rotate(0deg) scale(1); }
-}
-
-/* teks kutipan fade-in halus, menyusul ikon */
-.quote-glow p {
-  opacity: 0;
-  transform: translateY(6px);
-}
-.reveal.visible .quote-glow p {
-  animation: quoteTextIn 0.8s ease 0.75s both;
-}
-@keyframes quoteTextIn {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== Cup emoji bounce halus saat masuk viewport ===== */
-.cup-bounce {
-  display: inline-block;
-  opacity: 0;
-}
-.reveal.visible .cup-bounce {
-  animation: cupBounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
-}
-@keyframes cupBounce {
-  0% { transform: scale(0) rotate(-15deg); opacity: 0; }
-  60% { transform: scale(1.15) rotate(8deg); opacity: 1; }
-  100% { transform: scale(1) rotate(0deg); opacity: 1; }
-}
-
-/* ===== Penyesuaian mobile ===== */
-@media (max-width: 768px) {
-  /* Biji kopi melayang cukup rame kalau layar kecil, disembunyikan saja */
-  .bean-particle {
-    display: none;
-  }
-
-  /* Uap kopi diperkecil supaya tidak melebar keluar cangkir */
-  .steam {
-    width: 4px;
-    height: 14px;
-  }
-  @keyframes steamRise {
-    0% { opacity: 0; transform: translateY(0) scale(1); }
-    25% { opacity: 0.6; }
-    100% { opacity: 0; transform: translateY(-26px) scale(1.4); }
-  }
-
-  /* Pastikan kata per kata tetap rapat, tidak ada gap aneh dari inline-block */
-  .word-span {
-    margin-right: 0.15em;
-  }
-
-  /* Curtain reveal: radius lebih kecil biar proporsional di layar sempit */
-  .curtain-reveal {
-    clip-path: inset(0 50% 0 50% round 1.5rem);
-  }
-  .reveal.visible .curtain-reveal {
-    clip-path: inset(0 0 0 0 round 1.5rem);
-  }
-}
-  .reveal, .reveal-stagger > *, .shimmer-text, .cup-bounce, .quote-glow, .quote-glow::after,
-  .quote-glow i.fa-quote-left, .quote-glow p, .floating, .word-span, .curtain-reveal,
-  .bean-particle, .steam {
-    animation: none !important;
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-    clip-path: none !important;
-  }
-
-/* ===== Scroll progress bar ===== */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  width: 0%;
-  background: linear-gradient(90deg, #63773c, #836527, #bfc56b);
-  z-index: 9999;
-  transition: width 0.1s ease-out;
-}
-
-/* ===== Biji kopi melayang di background ===== */
-.bean-particle {
-  position: absolute;
-  font-size: 1.5rem;
-  opacity: 0.25;
-  animation: beanDrift 12s ease-in-out infinite;
-  filter: grayscale(0.3) blur(0.3px);
-}
-@keyframes beanDrift {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(15px, -20px) rotate(10deg); }
-  50% { transform: translate(-10px, 12px) rotate(-8deg); }
-  75% { transform: translate(10px, 18px) rotate(6deg); }
-}
-
-/* ===== Underline animasi di navbar ===== */
-.nav-link {
-  position: relative;
-}
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  height: 2px;
-  width: 0;
-  background: currentColor;
-  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.nav-link:hover::after {
-  width: 100%;
-}
-
-/* ===== Reveal kata per kata (hero tagline) ===== */
-.word-span {
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(12px);
-}
-.reveal.visible .word-span {
-  animation: wordIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes wordIn {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ===== Uap kopi mengepul dari cangkir ===== */
-.steam-wrap {
-  position: relative;
-  display: inline-block;
-}
-.steam {
-  position: absolute;
-  top: -6px;
-  width: 6px;
-  height: 20px;
-  background: rgba(247, 250, 204, 0.55);
-  border-radius: 50%;
-  filter: blur(3px);
-  opacity: 0;
-}
-.steam-1 { left: 36%; }
-.steam-2 { left: 50%; }
-.steam-3 { left: 64%; }
-.reveal.visible .steam-wrap .steam {
-  animation: steamRise 3.5s ease-in-out infinite;
-}
-.reveal.visible .steam-wrap .steam-1 { animation-delay: 0.9s; }
-.reveal.visible .steam-wrap .steam-2 { animation-delay: 2s; }
-.reveal.visible .steam-wrap .steam-3 { animation-delay: 3.1s; }
-@keyframes steamRise {
-  0% { opacity: 0; transform: translateY(0) scale(1); }
-  25% { opacity: 0.6; }
-  100% { opacity: 0; transform: translateY(-42px) scale(1.7); }
-}
-
-/* ===== Curtain reveal untuk kotak Signature ===== */
+/* ===== Curtain reveal (Signature section) ===== */
 .curtain-reveal {
   clip-path: inset(0 50% 0 50% round 3rem);
   transition: clip-path 1s cubic-bezier(0.16, 1, 0.3, 1);
@@ -336,154 +279,102 @@ body {
   clip-path: inset(0 0 0 0 round 3rem);
 }
 
-@media (max-width: 767px) {
-        html { -webkit-text-size-adjust: 100%; }
+/* ===== Mobile: uap lebih kecil ===== */
+@media (max-width: 639px) {
+  .steam {
+    width: 4px;
+    height: 14px;
+  }
+  @keyframes steamRise {
+    0%   { opacity: 0; transform: translateY(0) scale(1); }
+    25%  { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-26px) scale(1.4); }
+  }
 
-        body { line-height: 1.65; }
+  .curtain-reveal {
+    clip-path: inset(0 50% 0 50% round 1.5rem);
+  }
+  .reveal.visible .curtain-reveal {
+    clip-path: inset(0 0 0 0 round 1.5rem);
+  }
 
-        /* --- Navbar --- */
-        nav h1 { font-size: 1.5rem !important; }
-        nav p { font-size: 0.78rem !important; }
-        #menu-toggle {
-          font-size: 1.4rem;
-          padding: 0.4rem 0.6rem;
-          min-width: 44px;
-          min-height: 44px;
-        }
-        #mobile-menu a,
-        #mobile-menu button {
-          padding-top: 0.85rem;
-          padding-bottom: 0.85rem;
-          font-size: 1rem;
-        }
+  .word-span {
+    margin-right: 0.15em;
+  }
+}
 
-        /* --- Hero --- */
-        section.reveal.py-20 { padding-top: 3rem; padding-bottom: 3rem; }
-        .shimmer-text { font-size: 2.4rem !important; line-height: 1.15 !important; letter-spacing: -0.01em; }
-        .split-words { font-size: 1.05rem !important; line-height: 1.6 !important; padding: 0 0.25rem; }
-        .floating {
-          width: 5.5rem !important;
-          height: 5.5rem !important;
-          margin-bottom: 1.5rem !important;
-        }
-        .floating .sb-ico img { width: 68px !important; height: 68px !important; }
+/* ===== Touch device animations ===== */
 
-        /* --- Story section --- */
-        section.grid.lg\:grid-cols-2 { gap: 1.75rem !important; margin-bottom: 3.5rem !important; }
-        section h2.font-display.text-4xl { font-size: 1.85rem !important; margin-bottom: 1.1rem !important; }
-        .space-y-5 > p { font-size: 0.98rem !important; line-height: 1.7 !important; }
-        .quote-glow { padding: 1.25rem !important; border-radius: 1.5rem !important; }
-        .quote-glow p { font-size: 0.95rem !important; }
-        .quote-glow i { font-size: 1.2rem !important; }
+/* Tap ripple (pengganti magnetic hover) */
+.is-touch .magnetic-btn {
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+.is-touch .magnetic-btn .tap-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(247, 250, 204, 0.55);
+  transform: scale(0);
+  pointer-events: none;
+  animation: tapRipple 0.55s ease-out forwards;
+}
+@keyframes tapRipple {
+  to { transform: scale(3.2); opacity: 0; }
+}
 
-        /* Right panel (cup card) */
-        .relative.bg-\[\#836527\] { padding: 1.75rem !important; border-radius: 1.5rem !important; }
-        .cup-bounce { font-size: 4.5rem !important; margin-bottom: 1rem !important; }
-        .relative.bg-\[\#836527\] h3 { font-size: 1.5rem !important; }
-        .relative.bg-\[\#836527\] p { font-size: 0.92rem !important; }
+/* Tap bounce (pengganti tilt 3D) */
+.is-touch .tilt-card {
+  transform-origin: center;
+}
+.is-touch .tilt-card.tap-active {
+  animation: cardTapBounce 0.35s ease;
+}
+@keyframes cardTapBounce {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
 
-        /* --- Values section --- */
-        section.mb-24 h2.font-display.text-5xl { font-size: 1.9rem !important; }
-        section.mb-24 > .reveal.text-center > p { font-size: 0.92rem !important; }
-        .tilt-card { padding: 1.5rem !important; border-radius: 1.5rem !important; }
-        .tilt-card .w-16.h-16 { width: 3rem !important; height: 3rem !important; border-radius: 1rem !important; margin-bottom: 1rem !important; }
-        .tilt-card .w-16.h-16 i { font-size: 1.15rem !important; }
-        .tilt-card h3.text-2xl { font-size: 1.25rem !important; margin-bottom: 0.6rem !important; }
-        .tilt-card p.leading-relaxed { font-size: 0.9rem !important; }
+/* Float lebih halus di mobile */
+@media (max-width: 639px) {
+  .is-touch .floating {
+    animation: mobileFloatSoft 3.6s ease-in-out infinite;
+  }
+}
+@keyframes mobileFloatSoft {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
 
-        /* --- Signature section --- */
-        .curtain-reveal { padding: 1.75rem 1.25rem !important; border-radius: 1.75rem !important; }
-        .curtain-reveal h2.font-display.text-5xl { font-size: 1.75rem !important; }
-        .curtain-reveal .inline-flex.items-center.gap-2 { font-size: 0.75rem !important; padding: 0.4rem 0.9rem !important; }
-        .curtain-reveal .tilt-card { width: 100% !important; }
-        .curtain-reveal .tilt-card .text-5xl { font-size: 2.5rem !important; margin-bottom: 0.75rem !important; }
-        .curtain-reveal .tilt-card h3.text-2xl { font-size: 1.15rem !important; }
-        .curtain-reveal .tilt-card p.text-sm { font-size: 0.85rem !important; }
+/* Reveal lebih cepat di mobile */
+@media (max-width: 639px) {
+  .is-touch .reveal {
+    transition-duration: 0.5s;
+  }
+  .is-touch .reveal-stagger > * {
+    transition-duration: 0.45s;
+  }
+}
 
-        /* --- Contact section --- */
-        .bg-\[\#bfc56b\]\/20.rounded-\[2\.5rem\] { padding: 2rem 1.25rem !important; border-radius: 1.75rem !important; }
-        .bg-\[\#bfc56b\]\/20.rounded-\[2\.5rem\] h2 { font-size: 1.65rem !important; }
-        .bg-\[\#bfc56b\]\/20.rounded-\[2\.5rem\] p.text-lg { font-size: 0.95rem !important; line-height: 1.7 !important; }
-        .bg-\[\#bfc56b\]\/20.rounded-\[2\.5rem\] .w-20.h-20 { width: 3.5rem !important; height: 3.5rem !important; }
-        .bg-\[\#bfc56b\]\/20.rounded-\[2\.5rem\] .w-20.h-20 i { font-size: 1.4rem !important; }
-
-        /* --- Buttons: comfortable tap targets --- */
-        .magnetic-btn {
-          padding-top: 0.85rem !important;
-          padding-bottom: 0.85rem !important;
-          font-size: 0.95rem !important;
-          min-height: 48px;
-        }
-        .flex.flex-wrap.justify-center.gap-4 { gap: 0.85rem !important; }
-        .flex.flex-wrap.justify-center.gap-4 .magnetic-btn { flex: 1 1 auto; }
-
-        /* --- Footer --- */
-        footer { padding: 2.25rem 1.25rem !important; }
-        footer p { font-size: 0.85rem !important; }
-        footer p.italic { font-size: 0.82rem !important; }
-
-        /* --- Background decoration: lighter/blurrier so text stays readable --- */
-        .parallax-blob { opacity: 0.16 !important; }
-        .bean-particle { font-size: 1.1rem !important; opacity: 0.5 !important; }
-
-        /* --- Turn off desktop hover/mouse-tilt transforms on touch --- */
-        .tilt-card { transition: transform 0.25s ease, box-shadow 0.25s ease !important; }
-      }
-
-      /* =========================================================
-         MOBILE-ONLY ANIMATIONS
-         Dipicu lewat class ".is-touch" yang ditambahkan oleh JS
-         saat perangkat terdeteksi sebagai touch device.
-         ========================================================= */
-
-      /* Tap-ripple untuk tombol di mobile (pengganti magnetic-btn) */
-      .is-touch .magnetic-btn {
-        position: relative;
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-      }
-      .is-touch .magnetic-btn .tap-ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(247, 250, 204, 0.55);
-        transform: scale(0);
-        pointer-events: none;
-        animation: tapRipple 0.55s ease-out forwards;
-      }
-      @keyframes tapRipple {
-        to { transform: scale(3.2); opacity: 0; }
-      }
-
-      /* Tap-bounce untuk kartu (pengganti efek tilt 3D mouse) */
-      .is-touch .tilt-card { transform-origin: center; }
-      .is-touch .tilt-card.tap-active {
-        animation: cardTapBounce 0.35s ease;
-      }
-      @keyframes cardTapBounce {
-        0%   { transform: scale(1); }
-        40%  { transform: scale(0.97); }
-        100% { transform: scale(1); }
-      }
-
-      /* Gentle idle float untuk hero icon, lebih halus di mobile agar tidak mengganggu */
-      @media (max-width: 767px) {
-        .is-touch .floating { animation: mobileFloatSoft 3.6s ease-in-out infinite; }
-      }
-      @keyframes mobileFloatSoft {
-        0%, 100% { transform: translateY(0); }
-        50%      { transform: translateY(-6px); }
-      }
-
-      /* Reveal sedikit lebih cepat & ringan di mobile supaya terasa responsif saat scroll */
-      @media (max-width: 767px) {
-        .is-touch .reveal { transition-duration: 0.5s !important; }
-        .is-touch .reveal-stagger > * { transition-duration: 0.45s !important; }
-      }
-
-      /* Hormati preferensi pengguna yang mematikan animasi */
-      @media (prefers-reduced-motion: reduce) {
-        .is-touch .floating,
-        .is-touch .cup-bounce,
-        .parallax-blob,
-        .bean-particle { animation: none !important; }
-      }
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-stagger > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+  .shimmer-text {
+    animation: none;
+    background-position: 0 center;
+  }
+  .floating, .cup-bounce, .bean-particle,
+  .quote-glow, .quote-glow::after,
+  .quote-glow i.fa-quote-left, .quote-glow p,
+  .word-span, .steam {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
