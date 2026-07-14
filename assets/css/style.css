@@ -1,19 +1,54 @@
 :root {
-            --cream:    #f7facc;
-            --lime:     #bfc56b;
-            --forest:   #63773c;
-            --brown:    #836527;
-            --dark:     #050503;
-        }
+    --cream:    #f7facc;
+    --lime:     #bfc56b;
+    --forest:   #63773c;
+    --brown:    #836527;
+    --dark:     #050503;
+}
 
-        body { font-family: 'Inter', sans-serif; }
+* {
+    -webkit-tap-highlight-color: transparent;
+}
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-        }
-        .animate-float { animation: float 5s ease-in-out infinite; }
-        
-        .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 119, 60, 0.4); border-radius: 10px; }
+html, body {
+    overflow-x: hidden; /* cegah scroll horizontal tak sengaja di mobile */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+}
+.animate-float { animation: float 5s ease-in-out infinite; }
+
+.custom-scroll::-webkit-scrollbar { width: 4px; }
+.custom-scroll::-webkit-scrollbar-track { background: transparent; }
+.custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 119, 60, 0.4); border-radius: 10px; }
+
+/* --- Perbaikan Mobile --- */
+
+/* Gunakan dvh agar tinggi tidak "loncat" saat address bar HP muncul/hilang */
+.min-h-\[90vh\] {
+    min-height: 90vh;
+    min-height: 90dvh;
+}
+
+/* Safe area untuk HP dengan notch/dynamic island */
+@media (max-width: 767px) {
+    .min-h-\[90vh\] {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Kecilkan blur background di mobile agar tidak berat di HP low-end */
+@media (max-width: 767px) {
+    .fixed.inset-0.pointer-events-none div[class*="w-\[500px\]"] {
+        width: 280px !important;
+        height: 280px !important;
+        filter: blur(80px) !important;
+    }
+}

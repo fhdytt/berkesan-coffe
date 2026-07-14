@@ -2,11 +2,11 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="api-url" content="https://sublime-laughter-production.up.railway.app">
     <title>Berkesan Coffee | Menu</title>
     <link rel="stylesheet" href="/assets/css/style.css" />
-    <link rel="stylesheet" href="/assets/css/tailwind.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="/assets/fontawesome/css/all.min.css">
     <link rel="icon" href="/assets/img/berkesan_logo.png">
 </head>
@@ -16,7 +16,7 @@
          style="background: rgba(5,5,3,0.6); border: 1px solid rgba(191,197,107,0.15);">
         
         <!-- Left: Image Panel -->
-        <div class="relative w-full md:w-1/2 h-64 md:h-auto overflow-hidden group">
+        <div class="relative w-full md:w-1/2 h-48 sm:h-64 md:h-auto overflow-hidden group">
             <div class="absolute inset-0 z-10 md:bg-gradient-to-r"
                  style="background: linear-gradient(to top, var(--dark) 0%, transparent 60%);"></div>
             
@@ -27,13 +27,13 @@
             <!-- Overlay tint -->
             <div class="absolute inset-0 z-[5]" style="background: rgba(99,119,60,0.15);"></div>
 
-            <div class="absolute inset-0 z-20 flex flex-col justify-end md:justify-center p-8 md:p-12">
+            <div class="absolute inset-0 z-20 flex flex-col justify-end md:justify-center p-6 sm:p-8 md:p-12">
                 <div class="animate-float">
-                    <div class="inline-block p-4 rounded-2xl mb-4 shadow-xl"
+                    <div class="inline-block p-3 sm:p-4 rounded-2xl mb-3 sm:mb-4 shadow-xl"
                          style="background-color: var(--forest);">
-                        <img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 50px; height: 50px; object-fit: contain;">
+                        <img src="/assets/img/berkesan_logo.png" alt="Berkesan Coffee" style="width: 40px; height: 40px; object-fit: contain;" class="sm:w-[50px] sm:h-[50px]">
                     </div>
-                    <h1 class="text-4xl md:text-6xl font-black leading-none mb-2"
+                    <h1 class="text-3xl sm:text-4xl md:text-6xl font-black leading-none mb-2"
                         style="color: var(--cream);">
                         BERKESAN<br><span style="color: var(--lime);">COFFEE</span>
                     </h1>
@@ -45,10 +45,10 @@
         </div>
 
         <!-- Right: Menu Panel -->
-        <div class="w-full md:w-1/2 flex flex-col p-8 md:p-16 custom-scroll overflow-y-auto"
+        <div class="w-full md:w-1/2 flex flex-col p-5 sm:p-8 md:p-16 custom-scroll overflow-y-auto"
              style="background: rgba(5,5,3,0.45);">
             
-            <div class="flex justify-between items-center mb-10">
+            <div class="flex justify-between items-center mb-6 md:mb-10">
                 <span class="font-bold tracking-widest text-xs uppercase italic" style="color: var(--lime);">Experience the taste</span>
                 <div class="text-xs px-3 py-1 rounded-full"
                      style="color: rgba(191,197,107,0.6); background: rgba(99,119,60,0.1); border: 1px solid rgba(191,197,107,0.15);">
@@ -56,93 +56,93 @@
                 </div>
             </div>
 
-            <div class="space-y-4">
+            <div class="space-y-3 md:space-y-4">
                 
                 <!-- Order Now -->
-                <a href="/order" class="group flex items-center p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
+                <a href="/order" class="group flex items-center p-4 sm:p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
                    style="background: rgba(131,101,39,0.12); border: 1px solid rgba(131,101,39,0.25);"
                    onmouseover="this.style.background='var(--brown)'; this.style.borderColor='var(--brown)';"
                    onmouseout="this.style.background='rgba(131,101,39,0.12)'; this.style.borderColor='rgba(131,101,39,0.25)';">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl transition-colors"
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl transition-colors shrink-0"
                          style="background: rgba(131,101,39,0.25); color: var(--lime);">
                         <i class="fas fa-shopping-bag text-xl"></i>
                     </div>
-                    <div class="ml-4 flex-1">
+                    <div class="ml-4 flex-1 min-w-0">
                         <h3 class="font-bold" style="color: var(--cream);">Order Now</h3>
                         <p class="text-xs" style="color: rgba(247,250,204,0.45);">Pesan cepat via aplikasi</p>
                     </div>
-                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1" style="color: rgba(191,197,107,0.4);"></i>
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1 shrink-0" style="color: rgba(191,197,107,0.4);"></i>
                 </a>
 
                 <!-- About Us -->
-                <a href="/about" class="group flex items-center p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
+                <a href="/about" class="group flex items-center p-4 sm:p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
                    style="background: rgba(99,119,60,0.12); border: 1px solid rgba(99,119,60,0.25);"
                    onmouseover="this.style.background='var(--forest)'; this.style.borderColor='var(--forest)';"
                    onmouseout="this.style.background='rgba(99,119,60,0.12)'; this.style.borderColor='rgba(99,119,60,0.25)';">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl transition-colors"
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl transition-colors shrink-0"
                          style="background: rgba(99,119,60,0.25); color: var(--lime);">
                         <i class="fas fa-info-circle text-xl"></i>
                     </div>
-                    <div class="ml-4 flex-1">
+                    <div class="ml-4 flex-1 min-w-0">
                         <h3 class="font-bold" style="color: var(--cream);">About Us</h3>
                         <p class="text-xs" style="color: rgba(247,250,204,0.45);">Ketahui cerita dibalik layar</p>
                     </div>
-                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1" style="color: rgba(191,197,107,0.4);"></i>
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1 shrink-0" style="color: rgba(191,197,107,0.4);"></i>
                 </a>
 
                 <!-- Our Location -->
-                <a href="https://maps.app.goo.gl/H3Qmq6hthP3yPEUf6" class="group flex items-center p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
+                <a href="https://maps.app.goo.gl/H3Qmq6hthP3yPEUf6" class="group flex items-center p-4 sm:p-5 rounded-3xl transition-all duration-500 transform hover:-translate-y-1"
                    style="background: rgba(191,197,107,0.08); border: 1px solid rgba(191,197,107,0.2);"
                    onmouseover="this.style.background='rgba(191,197,107,0.2)'; this.style.borderColor='var(--lime)';"
                    onmouseout="this.style.background='rgba(191,197,107,0.08)'; this.style.borderColor='rgba(191,197,107,0.2)';">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl transition-colors"
+                    <div class="w-11 h-11 sm:w-12 sm:h-12 flex items-center justify-center rounded-2xl transition-colors shrink-0"
                          style="background: rgba(191,197,107,0.15); color: var(--lime);">
                         <i class="fas fa-map-marked-alt text-xl"></i>
                     </div>
-                    <div class="ml-4 flex-1">
+                    <div class="ml-4 flex-1 min-w-0">
                         <h3 class="font-bold" style="color: var(--cream);">Our Location</h3>
                         <p class="text-xs" style="color: rgba(247,250,204,0.45);">Temukan kedai terdekat</p>
                     </div>
-                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1" style="color: rgba(191,197,107,0.4);"></i>
+                    <i class="fas fa-arrow-right transition-transform group-hover:translate-x-1 shrink-0" style="color: rgba(191,197,107,0.4);"></i>
                 </a>
 
                 <!-- ShopeeFood Badge -->
-                <div class="p-5 rounded-3xl flex items-center justify-between"
+                <div class="p-4 sm:p-5 rounded-3xl flex items-center justify-between"
                      style="background: rgba(131,101,39,0.1); border: 1px solid rgba(131,101,39,0.3);">
-                    <div class="flex items-center">
-                        <div class="w-10 h-10 flex items-center justify-center rounded-xl"
+                    <div class="flex items-center min-w-0">
+                        <div class="w-10 h-10 flex items-center justify-center rounded-xl shrink-0"
                              style="background-color: var(--brown); color: var(--cream);">
                             <i class="fab fa-gripfire"></i>
                         </div>
-                        <div class="ml-4">
-                            <h4 class="text-sm font-bold tracking-wide" style="color: var(--cream);">ShopeeFood</h4>
+                        <div class="ml-4 min-w-0">
+                            <h4 class="text-sm font-bold tracking-wide truncate" style="color: var(--cream);">ShopeeFood</h4>
                             <p class="text-xs" style="color: var(--lime);">Berkesan Coffee</p>
                         </div>
                     </div>
-                    <span class="text-[10px] font-bold px-2 py-1 rounded-md uppercase"
+                    <span class="text-[10px] font-bold px-2 py-1 rounded-md uppercase shrink-0 ml-2"
                           style="background: rgba(131,101,39,0.25); color: var(--lime);">Promo</span>
                 </div>
             </div>
 
             <!-- Contact -->
-             <a href="https://wa.me/6287885190765">
-            <div class="mt-auto pt-10 grid grid-cols-1 gap-4">
+            <a href="https://wa.me/6287885190765">
+            <div class="mt-8 md:mt-auto pt-6 md:pt-10 grid grid-cols-1 gap-4">
                 <div class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                          style="background: rgba(99,119,60,0.15); color: var(--lime); border: 1px solid rgba(99,119,60,0.3);">
                         <i class="fab fa-whatsapp"></i>
                     </div>
-                    <div class="text-[11px]">
+                    <div class="text-[11px] min-w-0">
                         <p class="font-semibold" style="color: var(--cream);">WhatsApp Admin</p>
                         <p style="color: rgba(247,250,204,0.35);">Mon-Sun (08:00-22:00 WIB)</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                    <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
                          style="background: rgba(131,101,39,0.15); color: var(--lime); border: 1px solid rgba(131,101,39,0.3);">
                         <i class="far fa-envelope"></i>
                     </div>
-                    <div class="text-[11px]">
+                    <div class="text-[11px] min-w-0">
                         <p class="font-semibold italic truncate" style="color: var(--cream);">bulk & event order (087885190765)</p>
                         <p style="color: rgba(247,250,204,0.35);">Mon-Sun (08:00-20:00 WIB)</p>
                     </div>
