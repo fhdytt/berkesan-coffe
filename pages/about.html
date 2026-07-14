@@ -317,15 +317,32 @@
 
       // Scroll reveal
       const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+
+      function triggerVisible() {
+        revealEls.forEach(el => {
+          const rect = el.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            el.classList.add('visible');
+          }
+        });
+      }
+
       const io = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
             entry.target.classList.add('visible');
-            io.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.1 });
+      }, { threshold: 0, rootMargin: '0px 0px -40px 0px' });
       revealEls.forEach(el => io.observe(el));
+
+      // Trigger saat klik anchor (jump langsung ke section)
+      document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', () => setTimeout(triggerVisible, 100));
+      });
+
+      // Trigger elemen yang sudah di viewport saat load
+      triggerVisible();
 
       // Deteksi touch device
       const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
